@@ -1,0 +1,228 @@
+{
+  "project": "WEV",
+  "idea": "WEV Jevifies any local model, for free: see inside it, give it a typed decision mode, calibrate it, and gate it. (1) Inspect: a glass-box view of the model's next-token probabilities and entropy. (2) Jevify: you define a typed decision (choice, score or yes/no over a closed label set) and decide() answers it in one pass with per-label probabilities and a confidence, while generate() keeps the model's normal abilities. (3) Calibrate: WEV measures on real examples whether that confidence can be trusted. (4) Gate: confident decisions are acted on, uncertain ones fall back to the model's own generate() or a human. (5) Export: the wrapper, gate card and tests copy into your app as code, and every decision has a hashed receipt that /verify re-checks. Works with in-browser models, a local model server, or pre-scored output files; no server, no API key.",
+  "track": "web2",
+  "team": 1,
+  "event": {
+    "name": "GIBC V2",
+    "start": "2026-07-11T12:00:00+08:00",
+    "end": "2026-10-02T23:59:00+08:00",
+    "tz": "Asia/Taipei",
+    "submissionUrl": "https://gibc-v2.devpost.com/",
+    "hackathonTrack": "Track 03: Open (General Technical Invention) - judged on Creativity 35%, Execution 30%, Impact 20%, Presentation 15%"
+  },
+  "limits": {
+    "videoMaxSeconds": 300,
+    "videoMinSeconds": 120,
+    "repoMustBePublic": true,
+    "requiresOssLicense": false,
+    "aiDisclosureRequired": true,
+    "maxTeam": 6,
+    "minTeam": 1,
+    "requiredLicense": null,
+    "source": "devpost rules, read 2026-10-01",
+    "videoTargetSeconds": 255
+  },
+  "sponsors": [],
+  "theme": "brutal",
+  "accent": "#0047FF",
+  "illustrations": "none",
+  "source": "heuristic",
+  "unknown": [
+    "limits.minTeam",
+    "limits.requiredLicense",
+    "limits.requiresOssLicense",
+    "sponsors"
+  ],
+  "wedge": {
+    "title": "wev",
+    "sector": "WEB2 · Reliability tooling for on-device LLM features",
+    "target_user": "A developer adding a small on-device LLM feature (autocomplete, form-fill, classification) who must decide, per output, whether to act on it or fall back to a default or a human",
+    "painful_moment": "The model always returns an answer, even when its top two candidates were nearly tied or its distribution was flat. The developer has no per-output signal for 'safe to act on', so either everything is trusted or everything is double-checked.",
+    "unusual_constraint": "Any local model becomes a typed System 1 decider with a measured confidence, entirely on the user's machine: no server, no API key, and no second model grading the first.",
+    "proof_metric": "TARGET (unmeasured until `pnpm capture && pnpm calibrate` run): on a held-out half of ~100 synthetic labelled items, auto-handling only CONFIDENT verdicts gives higher accuracy than always taking the model's answer, reported as accuracy at coverage. Publish whatever the numbers are.",
+    "essential_sponsor": "none",
+    "essential_sponsor_role": "No sponsor is integrated. Inference stays local so the demo needs no key.",
+    "adversarial_critique": {
+      "why_generic_risk": "Token-probability viewers are common. WEV's difference is the decision on top: act, flag, or refuse, with a measured accuracy-at-coverage number instead of a picture.",
+      "obvious_competitor": "Purpose-trained System 1 models such as Jev (TypeSafe AI) that return typed values and confidence out of the box, and generic transformers.js / LM visualizers. WEV is not a model: it adapts the models people already run, then measures whether their confidence can be trusted.",
+      "unprovable_claim_risk": "A general LLM wrapped as a decider is an approximation, not equal to a model trained for typed decisions, and its confidence may be poorly calibrated. Labelled items are synthetic and builder-written. State item count, split, model and task wherever a number appears. Do not claim Jev compatibility or equivalence unless tested against real Jev output.",
+      "superficial_sponsor_risk": "No sponsor claimed.",
+      "hour_8_kill_criterion": "If the gate does not beat 'always take the model's answer' on the held-out half, show that on /proof as an honest negative result and lead the demo with the failure gallery."
+    },
+    "demand_signals": [],
+    "archetype": "ai-eval-lab"
+  },
+  "moat": {
+    "score": null,
+    "reasons": [
+      "Crowded space (token viewers). Differentiator is the measured act-or-abstain gate; moat score from the old heuristic search was dropped as stale."
+    ],
+    "angles": [
+      "Accuracy at coverage on captured real-model runs, reproducible with one command",
+      "Fails closed: malformed or flat distributions are escalated, never shown as confident",
+      "Decision receipts: every auto-action is replayable and tamper-evident",
+      "The calibrated gate exports as code with generated tests"
+    ],
+    "proxies": [],
+    "local": [],
+    "sector": "AI/ML & Generative AI"
+  },
+  "upgrades": {
+    "source": "manual",
+    "features": [
+      {
+        "feature": "Capture ~100 real SmolLM2 runs on a closed-label task; replace hand-written fixtures; seeded 50/50 split",
+        "why": "Every number on screen becomes measured",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Decider spec: define a typed decision (kind choice|score|noul, closed label set, instruction and few-shot examples). WEV scores every label's FULL token sequence in one pass (not just first token) and returns {value, probabilities, confidence} against a JSON schema; thresholds read from evidence/thresholds.json",
+        "why": "This is the 'Jev-style for any model' step and removes the top-5 renormalization distortion",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Model adapters behind one interface: in-browser transformers.js logits; local server with token log-probabilities (Ollama or llama.cpp, experimental); import of pre-scored outputs (text, gold, predicted, confidence or per-label probabilities) from any model",
+        "why": "Lets many models be Jev-style without WEV running them",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Dual-mode wrapper: jevify(model) returns { decide(), generate() }. decide() is the calibrated System 1 path; generate() is the model's unchanged normal behaviour. The gate routes low-confidence decisions to generate() (System 2 fallback) or the human queue, and the inbox shows which path each item took",
+        "why": "Shows the model keeps its abilities and gains Jev-style decisions, and makes the System 1 to System 2 handoff real",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Live inbox: items stream through the model; auto-handled vs escalated counters against an always-trust baseline",
+        "why": "Gives the demo a story and shows mistakes caught",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Accuracy-vs-coverage curve on /proof",
+        "why": "The one convincing visual for the gate",
+        "build_hours": 2,
+        "demo_visible": true
+      },
+      {
+        "feature": "Exportable gate (copy as TypeScript) with generated tests drawn from the calibration set",
+        "why": "Makes it a tool developers can use in CI",
+        "build_hours": 2,
+        "demo_visible": true
+      },
+      {
+        "feature": "Gate card JSON: model id, thresholds, calibration size, accuracy at coverage, date, limits",
+        "why": "Shareable, model-card-style record of what was measured",
+        "build_hours": 1,
+        "demo_visible": true
+      },
+      {
+        "feature": "Decision receipts (input, probabilities, gate version, verdict, sha256) re-checked on /verify with tamper detection",
+        "why": "Ties directly to the deterministic kernel and /proof track",
+        "build_hours": 3,
+        "demo_visible": true
+      },
+      {
+        "feature": "`pnpm calibrate` re-derives every on-screen number from committed captured runs with a fixed seed",
+        "why": "Answers 'how do I know these numbers are real'",
+        "build_hours": 1,
+        "demo_visible": false
+      },
+      {
+        "feature": "Failure gallery and limits panel on /proof",
+        "why": "Earns trust from technical judges",
+        "build_hours": 1,
+        "demo_visible": true
+      },
+      {
+        "feature": "Offline moment: load the model once, switch to airplane mode, run the inbox. Claim it only if tested",
+        "why": "Backs the runs-on-your-device story",
+        "build_hours": 1,
+        "demo_visible": true
+      },
+      {
+        "feature": "Calibrate on your own examples: paste or drop ~30 labelled items (CSV/JSON), WEV runs the chosen model on them and derives thresholds, accuracy at coverage and a gate card for that model and task",
+        "why": "Makes WEV a tool for any local model, not a one-model demo",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Model picker with 2-3 pre-tested presets (SmolLM2-135M, SmolLM2-360M, one more) plus a custom Hugging Face ONNX model id marked experimental",
+        "why": "Shows thresholds differ per model",
+        "build_hours": 3,
+        "demo_visible": true
+      },
+      {
+        "feature": "EXPERIMENTAL bring-your-own-model: drop a local ONNX model folder (config, tokenizer, onnx weights) and load it through a transformers.js custom cache; clear error if the architecture, size or memory fails",
+        "why": "Run the gate on a model that never left the user's machine",
+        "build_hours": 4,
+        "demo_visible": true
+      },
+      {
+        "feature": "Optional, cut first: cost-aware thresholds (cost of a wrong auto-action vs a human review), per-token uncertainty strip, prompt A/B, drift check",
+        "why": "Extra depth only if the core is done",
+        "build_hours": 6,
+        "demo_visible": false
+      }
+    ]
+  },
+  "archetype": "ai-eval-lab",
+  "displayName": "WEV",
+  "design": {
+    "preset": "brutal",
+    "radius": 0,
+    "tokens": {
+      "mode": "light",
+      "bg": "#f5f1e8",
+      "surface": "#ffffff",
+      "raised": "#ece8df",
+      "ink": "#0a0a0a",
+      "muted": "#4a4a4a",
+      "line": "#0a0a0a",
+      "accent": "#0047ff",
+      "state-clear": "#0b6b2f",
+      "state-flagged": "#c1121f",
+      "state-pending": "#8a5200",
+      "state-refused": "#44403c"
+    },
+    "fonts": {
+      "sans": "DM Sans",
+      "display": "Bricolage Grotesque",
+      "mono": "JetBrains Mono"
+    }
+  },
+  "landing": {
+    "name": "WEV",
+    "promise": "Jevify your local model. See it, calibrate it, trust it. For free.",
+    "usp": "Wrap any local model, Jev-style: it keeps working, but can now decide: a typed answer with measured confidence. Confident ones run instantly; the rest fall back or escalate. Copy the wrapper into your app. No server, no key.",
+    "problem": "Small models always answer, even when they were guessing, and they return text, not a typed decision with a trustworthy confidence. Your app cannot tell which answers are safe to act on.",
+    "boundary": "Reads probabilities on your device; never sends your prompts to a server. The model downloads once (~130MB) from a CDN, then is cached.",
+    "persona": {
+      "name": "Ada",
+      "role": "backend developer shipping an LLM feature"
+    },
+    "trust": [
+      "Runs on your device",
+      "No account, no API key",
+      "Every decision has a re-checkable receipt",
+      "Numbers re-derived by one command"
+    ],
+    "stateLabels": {
+      "clear": "Confident",
+      "flagged": "Uncertain",
+      "pending": "Needs review",
+      "refused": "Refused"
+    },
+    "cta": "Define a decision"
+  },
+  "proofSummary": {
+    "casesVerified": 8,
+    "driftCaught": null,
+    "digests": [],
+    "track": "web2",
+    "details": "8 hand-written fixtures verified against the kernel; real-model capture pending"
+  }
+}

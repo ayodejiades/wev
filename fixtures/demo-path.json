@@ -1,0 +1,49 @@
+{
+  "baseUrl": "${DEPLOY_URL}",
+  "viewport": { "width": 1920, "height": 1080 },
+  "steps": [
+    { "say": "WEV Jevifies any local model: inspect, decide, gate, export", "goto": "/" },
+    {
+      "say": "Inspect: type a prompt, see next-token probabilities and entropy",
+      "goto": "/live",
+      "fill": { "[data-demo='live-prompt']": "The capital of France is" },
+      "click": "[data-demo='live-inspect']",
+      "waitFor": "[data-demo='live-result']"
+    },
+    {
+      "say": "Decide: stream held-out tickets; typed label plus confidence per item",
+      "goto": "/inbox",
+      "click": "[data-demo='inbox-run']",
+      "waitFor": "[data-demo='inbox-rows']"
+    },
+    {
+      "say": "Measured accuracy at coverage, with the limits panel",
+      "goto": "/proof",
+      "waitFor": "[data-demo='proof-chart']"
+    },
+    {
+      "say": "Copy the gate wrapper to paste into your app",
+      "goto": "/inbox",
+      "click": "[data-demo='copy-gate']"
+    },
+    {
+      "say": "Load a sample receipt and verify it",
+      "goto": "/verify",
+      "click": "[data-demo='receipt-sample']"
+    },
+    {
+      "say": "Recompute the hash and the verdict from the pinned inputs",
+      "click": "[data-demo='receipt-check']",
+      "waitFor": "[data-demo='receipt-verdict']"
+    },
+    {
+      "say": "Flip one hash character and watch tamper detection fire",
+      "click": "[data-demo='receipt-tamper']"
+    },
+    {
+      "say": "Re-verify: the same receipt now reads TAMPERED",
+      "click": "[data-demo='receipt-check']",
+      "waitFor": "[data-demo='receipt-verdict']"
+    }
+  ]
+}

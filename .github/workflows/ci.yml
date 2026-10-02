@@ -1,0 +1,86 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        if: hashFiles('package.json') != ''
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Set up Node
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install (node)
+        if: hashFiles('package.json') != ''
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (node)
+        if: hashFiles('package.json') != ''
+        run: pnpm lint
+
+      - name: Build (node)
+        if: hashFiles('package.json') != ''
+        run: pnpm build
+
+      - name: Test (node)
+        if: hashFiles('package.json') != ''
+        run: pnpm test
+
+      # --- The production path, which nothing used to exercise ---------------------
+      # Every test above runs with DEMO_MODE=1, which short-circuits the database to an
+      # in-memory store. That made it structurally impossible to catch a broken
+      # migration or a missing table — the failure only appears once a judge loads the
+      # deployed app against a real database. This job runs the real thing: migrate an
+      # empty Postgres, then round-trip a record with DEMO_MODE=0.
+      - name: Start Postgres
+        if: hashFiles('drizzle.config.ts') != ''
+        uses: ankane/setup-postgres@v1
+        with:
+          postgres-version: 16
+          database: kit_test
+          user: kit
+          password: kit
+
+      - name: Apply migrations to a real database
+        if: hashFiles('drizzle.config.ts') != ''
+        env:
+          DATABASE_URL: postgres://kit:kit@localhost:5432/kit_test
+        run: pnpm db:migrate
+
+      - name: Integration test against the real database
+        if: hashFiles('drizzle.config.ts') != ''
+        env:
+          DATABASE_URL: postgres://kit:kit@localhost:5432/kit_test
+          DEMO_MODE: "0"
+        run: node --import tsx --test tests/integration.test.mjs
+
+      - name: Set up Python
+        if: hashFiles('pyproject.toml') != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        if: hashFiles('pyproject.toml') != ''
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install (python)
+        if: hashFiles('pyproject.toml') != ''
+        run: uv sync
+
+      - name: Test (python)
+        if: hashFiles('pyproject.toml') != ''
+        run: uv run pytest

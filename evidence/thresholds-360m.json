@@ -1,0 +1,9 @@
+{
+  "modelId": "onnx-community/SmolLM2-360M-ONNX",
+  "dtype": "uint8",
+  "seed": 42,
+  "autoConfidence": 0.5,
+  "maxEntropyBits": 3,
+  "calibratedOn": 50,
+  "note": "AUTO iff confidence >= autoConfidence AND entropyBits <= maxEntropyBits, else ESCALATE. Picked on the calibration half only; held-out numbers are the honest report."
+}

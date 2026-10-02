@@ -1,0 +1,1515 @@
+{
+  "modelId": "onnx-community/SmolLM2-135M-ONNX",
+  "dtype": "uint8",
+  "decider": "support-ticket-triage@triage-v1",
+  "promptTemplate": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"<TEXT>\"\nLabel:",
+  "scoring": "closed label set (refund/review/reject) via full-sequence log-probabilities from lib/decider.ts, softmax over the label set only; no top-5 renormalization; full-vocabulary softmax for entropyBits",
+  "limitation": "Single small model (SmolLM2-135M-ONNX uint8), one few-shot prompt, one closed task. Shared-prefix labels are handled by full-sequence scoring in lib/decider.ts.",
+  "syntheticDataNote": "Gold labels are SYNTHETIC, hand-written in data/items.json by the author, not human-annotated real tickets.",
+  "generatedAt": "2026-10-01T17:01:42.433Z",
+  "accuracy": 0.33,
+  "correct": 33,
+  "total": 100,
+  "runs": [
+    {
+      "id": "T-001",
+      "text": "I was charged twice for $18, please give it back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I was charged twice for $18, please give it back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8394,
+        "review": 0.1331,
+        "reject": 0.0275
+      },
+      "prediction": "refund",
+      "confidence": 0.8394,
+      "entropyBits": 5.5678,
+      "correct": true
+    },
+    {
+      "id": "T-002",
+      "text": "My card shows two $22 payments for one order",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My card shows two $22 payments for one order\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8821,
+        "review": 0.0953,
+        "reject": 0.0226
+      },
+      "prediction": "refund",
+      "confidence": 0.8821,
+      "entropyBits": 5.899,
+      "correct": true
+    },
+    {
+      "id": "T-003",
+      "text": "The blender arrived cracked, I want a refund",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The blender arrived cracked, I want a refund\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6873,
+        "review": 0.0832,
+        "reject": 0.2295
+      },
+      "prediction": "refund",
+      "confidence": 0.6873,
+      "entropyBits": 6.5071,
+      "correct": true
+    },
+    {
+      "id": "T-004",
+      "text": "Package never arrived and tracking is dead, refund me",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Package never arrived and tracking is dead, refund me\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5154,
+        "review": 0.3763,
+        "reject": 0.1083
+      },
+      "prediction": "refund",
+      "confidence": 0.5154,
+      "entropyBits": 8.041,
+      "correct": true
+    },
+    {
+      "id": "T-005",
+      "text": "You billed me after I cancelled, return my $45",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"You billed me after I cancelled, return my $45\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8357,
+        "review": 0.1423,
+        "reject": 0.022
+      },
+      "prediction": "refund",
+      "confidence": 0.8357,
+      "entropyBits": 6.4987,
+      "correct": true
+    },
+    {
+      "id": "T-006",
+      "text": "Wrong size shirt sent, I paid for express, refund the difference",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Wrong size shirt sent, I paid for express, refund the difference\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5296,
+        "review": 0.3302,
+        "reject": 0.1401
+      },
+      "prediction": "refund",
+      "confidence": 0.5296,
+      "entropyBits": 6.935,
+      "correct": true
+    },
+    {
+      "id": "T-007",
+      "text": "My kid ordered $60 of coins by accident, please refund",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My kid ordered $60 of coins by accident, please refund\"\nLabel:",
+      "probabilities": {
+        "refund": 0.464,
+        "review": 0.2258,
+        "reject": 0.3101
+      },
+      "prediction": "refund",
+      "confidence": 0.464,
+      "entropyBits": 7.6134,
+      "correct": true
+    },
+    {
+      "id": "T-008",
+      "text": "Refund my last month, the app never worked",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Refund my last month, the app never worked\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7523,
+        "review": 0.2221,
+        "reject": 0.0256
+      },
+      "prediction": "refund",
+      "confidence": 0.7523,
+      "entropyBits": 6.6587,
+      "correct": true
+    },
+    {
+      "id": "T-009",
+      "text": "I returned the headphones last week, where is my $89 back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I returned the headphones last week, where is my $89 back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8404,
+        "review": 0.1187,
+        "reject": 0.0408
+      },
+      "prediction": "refund",
+      "confidence": 0.8404,
+      "entropyBits": 7.4247,
+      "correct": true
+    },
+    {
+      "id": "T-010",
+      "text": "Double charge on my invoice #4412, fix it",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Double charge on my invoice #4412, fix it\"\nLabel:",
+      "probabilities": {
+        "refund": 0.688,
+        "review": 0.2372,
+        "reject": 0.0748
+      },
+      "prediction": "refund",
+      "confidence": 0.688,
+      "entropyBits": 7.7333,
+      "correct": true
+    },
+    {
+      "id": "T-011",
+      "text": "The hotel cancelled on us, we want our deposit back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The hotel cancelled on us, we want our deposit back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.764,
+        "review": 0.0684,
+        "reject": 0.1676
+      },
+      "prediction": "refund",
+      "confidence": 0.764,
+      "entropyBits": 6.5477,
+      "correct": true
+    },
+    {
+      "id": "T-012",
+      "text": "Trial ended yesterday but I was charged $29 anyway",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Trial ended yesterday but I was charged $29 anyway\"\nLabel:",
+      "probabilities": {
+        "refund": 0.446,
+        "review": 0.544,
+        "reject": 0.0101
+      },
+      "prediction": "review",
+      "confidence": 0.544,
+      "entropyBits": 6.9752,
+      "correct": false
+    },
+    {
+      "id": "T-013",
+      "text": "My order came with one shoe missing, send money back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My order came with one shoe missing, send money back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7767,
+        "review": 0.0447,
+        "reject": 0.1786
+      },
+      "prediction": "refund",
+      "confidence": 0.7767,
+      "entropyBits": 6.9629,
+      "correct": true
+    },
+    {
+      "id": "T-014",
+      "text": "I paid for next-day and it took a week, I want that fee back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I paid for next-day and it took a week, I want that fee back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.9301,
+        "review": 0.0172,
+        "reject": 0.0527
+      },
+      "prediction": "refund",
+      "confidence": 0.9301,
+      "entropyBits": 3.4872,
+      "correct": true
+    },
+    {
+      "id": "T-015",
+      "text": "Subscription renewed without warning, cancel and refund",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Subscription renewed without warning, cancel and refund\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5107,
+        "review": 0.1784,
+        "reject": 0.3109
+      },
+      "prediction": "refund",
+      "confidence": 0.5107,
+      "entropyBits": 7.2587,
+      "correct": true
+    },
+    {
+      "id": "T-016",
+      "text": "The screen protector does not fit my phone, refund please",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The screen protector does not fit my phone, refund please\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5839,
+        "review": 0.2012,
+        "reject": 0.2149
+      },
+      "prediction": "refund",
+      "confidence": 0.5839,
+      "entropyBits": 7.6171,
+      "correct": true
+    },
+    {
+      "id": "T-017",
+      "text": "Charged $12.99 three times for one coffee subscription",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Charged $12.99 three times for one coffee subscription\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6439,
+        "review": 0.2269,
+        "reject": 0.1292
+      },
+      "prediction": "refund",
+      "confidence": 0.6439,
+      "entropyBits": 7.0916,
+      "correct": true
+    },
+    {
+      "id": "T-018",
+      "text": "Concert was cancelled, when do I get my $75 back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Concert was cancelled, when do I get my $75 back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.751,
+        "review": 0.2104,
+        "reject": 0.0386
+      },
+      "prediction": "refund",
+      "confidence": 0.751,
+      "entropyBits": 6.8094,
+      "correct": true
+    },
+    {
+      "id": "T-019",
+      "text": "My account was debited twice this morning",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My account was debited twice this morning\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8262,
+        "review": 0.0957,
+        "reject": 0.0781
+      },
+      "prediction": "refund",
+      "confidence": 0.8262,
+      "entropyBits": 5.6227,
+      "correct": true
+    },
+    {
+      "id": "T-020",
+      "text": "Item arrived broken in two pieces, need my money back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Item arrived broken in two pieces, need my money back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.834,
+        "review": 0.0688,
+        "reject": 0.0972
+      },
+      "prediction": "refund",
+      "confidence": 0.834,
+      "entropyBits": 6.9506,
+      "correct": true
+    },
+    {
+      "id": "T-021",
+      "text": "Where is my order? Tracking says delivered but porch is empty",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Where is my order? Tracking says delivered but porch is empty\"\nLabel:",
+      "probabilities": {
+        "refund": 0.2052,
+        "review": 0.7469,
+        "reject": 0.0479
+      },
+      "prediction": "review",
+      "confidence": 0.7469,
+      "entropyBits": 7.8735,
+      "correct": true
+    },
+    {
+      "id": "T-022",
+      "text": "How do I change the address on order #8821",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"How do I change the address on order #8821\"\nLabel:",
+      "probabilities": {
+        "refund": 0.328,
+        "review": 0.503,
+        "reject": 0.1689
+      },
+      "prediction": "review",
+      "confidence": 0.503,
+      "entropyBits": 8.2046,
+      "correct": true
+    },
+    {
+      "id": "T-023",
+      "text": "Can I switch my plan from monthly to yearly",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Can I switch my plan from monthly to yearly\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6111,
+        "review": 0.3211,
+        "reject": 0.0678
+      },
+      "prediction": "refund",
+      "confidence": 0.6111,
+      "entropyBits": 8.1747,
+      "correct": false
+    },
+    {
+      "id": "T-024",
+      "text": "The setup guide step 4 does not match my screen",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The setup guide step 4 does not match my screen\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4138,
+        "review": 0.3563,
+        "reject": 0.2299
+      },
+      "prediction": "refund",
+      "confidence": 0.4138,
+      "entropyBits": 7.1783,
+      "correct": false
+    },
+    {
+      "id": "T-025",
+      "text": "What is your warranty on the kettle I bought",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"What is your warranty on the kettle I bought\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5146,
+        "review": 0.4317,
+        "reject": 0.0536
+      },
+      "prediction": "refund",
+      "confidence": 0.5146,
+      "entropyBits": 8.6436,
+      "correct": false
+    },
+    {
+      "id": "T-026",
+      "text": "My password reset link expired, can you send a new one",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My password reset link expired, can you send a new one\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6954,
+        "review": 0.1829,
+        "reject": 0.1218
+      },
+      "prediction": "refund",
+      "confidence": 0.6954,
+      "entropyBits": 7.3871,
+      "correct": false
+    },
+    {
+      "id": "T-027",
+      "text": "Do you ship to Taipei, and how long does it take",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Do you ship to Taipei, and how long does it take\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8373,
+        "review": 0.1014,
+        "reject": 0.0613
+      },
+      "prediction": "refund",
+      "confidence": 0.8373,
+      "entropyBits": 5.9056,
+      "correct": false
+    },
+    {
+      "id": "T-028",
+      "text": "The invoice has the wrong company name, can you fix it",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The invoice has the wrong company name, can you fix it\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8987,
+        "review": 0.0489,
+        "reject": 0.0523
+      },
+      "prediction": "refund",
+      "confidence": 0.8987,
+      "entropyBits": 5.3123,
+      "correct": false
+    },
+    {
+      "id": "T-029",
+      "text": "I need a receipt for my expense report for March",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I need a receipt for my expense report for March\"\nLabel:",
+      "probabilities": {
+        "refund": 0.829,
+        "review": 0.0524,
+        "reject": 0.1186
+      },
+      "prediction": "refund",
+      "confidence": 0.829,
+      "entropyBits": 6.1927,
+      "correct": false
+    },
+    {
+      "id": "T-030",
+      "text": "Which cable fits the 2021 charger, USB-C or Lightning",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Which cable fits the 2021 charger, USB-C or Lightning\"\nLabel:",
+      "probabilities": {
+        "refund": 0.1079,
+        "review": 0.7966,
+        "reject": 0.0954
+      },
+      "prediction": "review",
+      "confidence": 0.7966,
+      "entropyBits": 8.5307,
+      "correct": true
+    },
+    {
+      "id": "T-031",
+      "text": "My appointment is Tuesday, can I move it to Thursday",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My appointment is Tuesday, can I move it to Thursday\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6421,
+        "review": 0.0223,
+        "reject": 0.3356
+      },
+      "prediction": "refund",
+      "confidence": 0.6421,
+      "entropyBits": 7.0114,
+      "correct": false
+    },
+    {
+      "id": "T-032",
+      "text": "The app crashes when I upload a photo over 5MB",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The app crashes when I upload a photo over 5MB\"\nLabel:",
+      "probabilities": {
+        "refund": 0.172,
+        "review": 0.3197,
+        "reject": 0.5083
+      },
+      "prediction": "reject",
+      "confidence": 0.5083,
+      "entropyBits": 8.2311,
+      "correct": false
+    },
+    {
+      "id": "T-033",
+      "text": "Is the blue jacket back in stock in size M",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Is the blue jacket back in stock in size M\"\nLabel:",
+      "probabilities": {
+        "refund": 0.415,
+        "review": 0.3513,
+        "reject": 0.2337
+      },
+      "prediction": "refund",
+      "confidence": 0.415,
+      "entropyBits": 7.5893,
+      "correct": false
+    },
+    {
+      "id": "T-034",
+      "text": "Please explain the $3 service fee on my bill",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Please explain the $3 service fee on my bill\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7969,
+        "review": 0.1024,
+        "reject": 0.1007
+      },
+      "prediction": "refund",
+      "confidence": 0.7969,
+      "entropyBits": 6.933,
+      "correct": false
+    },
+    {
+      "id": "T-035",
+      "text": "Can you hold my delivery until Friday",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Can you hold my delivery until Friday\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7534,
+        "review": 0.1284,
+        "reject": 0.1182
+      },
+      "prediction": "refund",
+      "confidence": 0.7534,
+      "entropyBits": 7.7795,
+      "correct": false
+    },
+    {
+      "id": "T-036",
+      "text": "MAKE MONEY FAST click here bit.ly/xyz win prize now",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3519,
+        "review": 0.3553,
+        "reject": 0.2928
+      },
+      "prediction": "review",
+      "confidence": 0.3553,
+      "entropyBits": 7.892,
+      "correct": false
+    },
+    {
+      "id": "T-037",
+      "text": "You idiots are trash, I will spam your inbox all day",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"You idiots are trash, I will spam your inbox all day\"\nLabel:",
+      "probabilities": {
+        "refund": 0.1876,
+        "review": 0.4316,
+        "reject": 0.3809
+      },
+      "prediction": "review",
+      "confidence": 0.4316,
+      "entropyBits": 8.7329,
+      "correct": false
+    },
+    {
+      "id": "T-038",
+      "text": "I will hurt your staff if you do not pay me $500",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I will hurt your staff if you do not pay me $500\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6334,
+        "review": 0.2032,
+        "reject": 0.1634
+      },
+      "prediction": "refund",
+      "confidence": 0.6334,
+      "entropyBits": 6.659,
+      "correct": false
+    },
+    {
+      "id": "T-039",
+      "text": "Free crypto giveaway, send 0.1 BTC to double it",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Free crypto giveaway, send 0.1 BTC to double it\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5908,
+        "review": 0.3221,
+        "reject": 0.0871
+      },
+      "prediction": "refund",
+      "confidence": 0.5908,
+      "entropyBits": 7.8834,
+      "correct": false
+    },
+    {
+      "id": "T-040",
+      "text": "Buy followers cheap, 10k for $5, DM me",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Buy followers cheap, 10k for $5, DM me\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5435,
+        "review": 0.2427,
+        "reject": 0.2138
+      },
+      "prediction": "refund",
+      "confidence": 0.5435,
+      "entropyBits": 6.6721,
+      "correct": false
+    },
+    {
+      "id": "T-041",
+      "text": "This is my 40th message today, you suck lol",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"This is my 40th message today, you suck lol\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7878,
+        "review": 0.1168,
+        "reject": 0.0954
+      },
+      "prediction": "refund",
+      "confidence": 0.7878,
+      "entropyBits": 7.2421,
+      "correct": false
+    },
+    {
+      "id": "T-042",
+      "text": "Call 0900-SEX-LINE for a good time",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Call 0900-SEX-LINE for a good time\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3627,
+        "review": 0.515,
+        "reject": 0.1223
+      },
+      "prediction": "review",
+      "confidence": 0.515,
+      "entropyBits": 8.42,
+      "correct": false
+    },
+    {
+      "id": "T-043",
+      "text": "You owe me a million dollars because I said so",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"You owe me a million dollars because I said so\"\nLabel:",
+      "probabilities": {
+        "refund": 0.9413,
+        "review": 0.0282,
+        "reject": 0.0305
+      },
+      "prediction": "refund",
+      "confidence": 0.9413,
+      "entropyBits": 6.0363,
+      "correct": false
+    },
+    {
+      "id": "T-044",
+      "text": "I hate this company, die die die",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I hate this company, die die die\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4559,
+        "review": 0.1782,
+        "reject": 0.3659
+      },
+      "prediction": "refund",
+      "confidence": 0.4559,
+      "entropyBits": 8.0151,
+      "correct": false
+    },
+    {
+      "id": "T-045",
+      "text": "SEO services, rank #1 on Google guaranteed, reply now",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"SEO services, rank #1 on Google guaranteed, reply now\"\nLabel:",
+      "probabilities": {
+        "refund": 0.2181,
+        "review": 0.437,
+        "reject": 0.3449
+      },
+      "prediction": "review",
+      "confidence": 0.437,
+      "entropyBits": 7.8702,
+      "correct": false
+    },
+    {
+      "id": "T-046",
+      "text": "Your refund policy is stupid and so are you",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Your refund policy is stupid and so are you\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6421,
+        "review": 0.161,
+        "reject": 0.1969
+      },
+      "prediction": "refund",
+      "confidence": 0.6421,
+      "entropyBits": 7.7525,
+      "correct": false
+    },
+    {
+      "id": "T-047",
+      "text": "I demand a full refund plus $200 for my time, or else",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I demand a full refund plus $200 for my time, or else\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7214,
+        "review": 0.1077,
+        "reject": 0.1708
+      },
+      "prediction": "refund",
+      "confidence": 0.7214,
+      "entropyBits": 7.1077,
+      "correct": true
+    },
+    {
+      "id": "T-048",
+      "text": "The food was cold but the driver was nice, not sure what I want",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The food was cold but the driver was nice, not sure what I want\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4204,
+        "review": 0.3569,
+        "reject": 0.2227
+      },
+      "prediction": "refund",
+      "confidence": 0.4204,
+      "entropyBits": 7.5978,
+      "correct": false
+    },
+    {
+      "id": "T-049",
+      "text": "Charged $9 extra, might be my mistake, can someone check",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Charged $9 extra, might be my mistake, can someone check\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5932,
+        "review": 0.2445,
+        "reject": 0.1623
+      },
+      "prediction": "refund",
+      "confidence": 0.5932,
+      "entropyBits": 7.1752,
+      "correct": false
+    },
+    {
+      "id": "T-050",
+      "text": "I want my money back unless you can fix it by Friday",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I want my money back unless you can fix it by Friday\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7962,
+        "review": 0.0956,
+        "reject": 0.1081
+      },
+      "prediction": "refund",
+      "confidence": 0.7962,
+      "entropyBits": 6.7541,
+      "correct": false
+    },
+    {
+      "id": "T-051",
+      "text": "The jacket is fine but the colour is off, thinking of returning",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The jacket is fine but the colour is off, thinking of returning\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5449,
+        "review": 0.3747,
+        "reject": 0.0805
+      },
+      "prediction": "refund",
+      "confidence": 0.5449,
+      "entropyBits": 7.7795,
+      "correct": false
+    },
+    {
+      "id": "T-052",
+      "text": "Paid for premium but basic looks the same, explain or refund",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Paid for premium but basic looks the same, explain or refund\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7034,
+        "review": 0.2188,
+        "reject": 0.0778
+      },
+      "prediction": "refund",
+      "confidence": 0.7034,
+      "entropyBits": 6.9568,
+      "correct": false
+    },
+    {
+      "id": "T-053",
+      "text": "My son says the game does not work, maybe he installed it wrong",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My son says the game does not work, maybe he installed it wrong\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6932,
+        "review": 0.1325,
+        "reject": 0.1743
+      },
+      "prediction": "refund",
+      "confidence": 0.6932,
+      "entropyBits": 7.8638,
+      "correct": false
+    },
+    {
+      "id": "T-054",
+      "text": "Delivery was two days late but item is perfect",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Delivery was two days late but item is perfect\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6576,
+        "review": 0.2372,
+        "reject": 0.1052
+      },
+      "prediction": "refund",
+      "confidence": 0.6576,
+      "entropyBits": 7.3265,
+      "correct": false
+    },
+    {
+      "id": "T-055",
+      "text": "I cancelled by phone, not sure it went through, bill looks high",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I cancelled by phone, not sure it went through, bill looks high\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5638,
+        "review": 0.3424,
+        "reject": 0.0939
+      },
+      "prediction": "refund",
+      "confidence": 0.5638,
+      "entropyBits": 7.2771,
+      "correct": false
+    },
+    {
+      "id": "T-056",
+      "text": "The fee is small but I do not recognise it",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The fee is small but I do not recognise it\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6365,
+        "review": 0.3314,
+        "reject": 0.0322
+      },
+      "prediction": "refund",
+      "confidence": 0.6365,
+      "entropyBits": 7.2242,
+      "correct": false
+    },
+    {
+      "id": "T-057",
+      "text": "Partly broken, partly my fault for dropping it",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Partly broken, partly my fault for dropping it\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6106,
+        "review": 0.3321,
+        "reject": 0.0573
+      },
+      "prediction": "refund",
+      "confidence": 0.6106,
+      "entropyBits": 8.0975,
+      "correct": false
+    },
+    {
+      "id": "T-058",
+      "text": "Refund? Actually just tell me where my parcel is first",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Refund? Actually just tell me where my parcel is first\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4705,
+        "review": 0.1594,
+        "reject": 0.3701
+      },
+      "prediction": "refund",
+      "confidence": 0.4705,
+      "entropyBits": 6.8001,
+      "correct": false
+    },
+    {
+      "id": "T-059",
+      "text": "Your agent was rude, I want compensation",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Your agent was rude, I want compensation\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7952,
+        "review": 0.1382,
+        "reject": 0.0666
+      },
+      "prediction": "refund",
+      "confidence": 0.7952,
+      "entropyBits": 6.4875,
+      "correct": false
+    },
+    {
+      "id": "T-060",
+      "text": "It works but the battery drains fast, is that normal or a defect",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"It works but the battery drains fast, is that normal or a defect\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3854,
+        "review": 0.4692,
+        "reject": 0.1454
+      },
+      "prediction": "review",
+      "confidence": 0.4692,
+      "entropyBits": 8.1019,
+      "correct": true
+    },
+    {
+      "id": "T-061",
+      "text": "I love the product but my wife hates it, what are my options",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I love the product but my wife hates it, what are my options\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6023,
+        "review": 0.29,
+        "reject": 0.1077
+      },
+      "prediction": "refund",
+      "confidence": 0.6023,
+      "entropyBits": 8.0574,
+      "correct": false
+    },
+    {
+      "id": "T-062",
+      "text": "Charged once, service failed once, coincidence",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Charged once, service failed once, coincidence\"\nLabel:",
+      "probabilities": {
+        "refund": 0.9106,
+        "review": 0.0581,
+        "reject": 0.0312
+      },
+      "prediction": "refund",
+      "confidence": 0.9106,
+      "entropyBits": 5.865,
+      "correct": false
+    },
+    {
+      "id": "T-063",
+      "text": "Give me back my cash you thieves (order arrived fine though)",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Give me back my cash you thieves (order arrived fine though)\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7647,
+        "review": 0.1718,
+        "reject": 0.0635
+      },
+      "prediction": "refund",
+      "confidence": 0.7647,
+      "entropyBits": 7.2325,
+      "correct": false
+    },
+    {
+      "id": "T-064",
+      "text": "Not happy, not angry, just confused about the $4 fee",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Not happy, not angry, just confused about the $4 fee\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5096,
+        "review": 0.3733,
+        "reject": 0.1172
+      },
+      "prediction": "refund",
+      "confidence": 0.5096,
+      "entropyBits": 8.4551,
+      "correct": false
+    },
+    {
+      "id": "T-065",
+      "text": "The movie was bad, I want my ticket money back lol",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The movie was bad, I want my ticket money back lol\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8486,
+        "review": 0.1046,
+        "reject": 0.0468
+      },
+      "prediction": "refund",
+      "confidence": 0.8486,
+      "entropyBits": 6.7894,
+      "correct": true
+    },
+    {
+      "id": "T-066",
+      "text": "Five stars, but I was billed twice by mistake I think",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Five stars, but I was billed twice by mistake I think\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4307,
+        "review": 0.5244,
+        "reject": 0.0449
+      },
+      "prediction": "review",
+      "confidence": 0.5244,
+      "entropyBits": 7.5959,
+      "correct": false
+    },
+    {
+      "id": "T-067",
+      "text": "Please help, my request is urgent-ish, money involved maybe",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Please help, my request is urgent-ish, money involved maybe\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7599,
+        "review": 0.1737,
+        "reject": 0.0664
+      },
+      "prediction": "refund",
+      "confidence": 0.7599,
+      "entropyBits": 7.0209,
+      "correct": false
+    },
+    {
+      "id": "T-068",
+      "text": "I clicked refund by accident, I actually just have a question",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"I clicked refund by accident, I actually just have a question\"\nLabel:",
+      "probabilities": {
+        "refund": 0.818,
+        "review": 0.1293,
+        "reject": 0.0527
+      },
+      "prediction": "refund",
+      "confidence": 0.818,
+      "entropyBits": 6.3819,
+      "correct": false
+    },
+    {
+      "id": "T-069",
+      "text": "Stupid app took my $5, whatever, fix it or don't",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Stupid app took my $5, whatever, fix it or don't\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6706,
+        "review": 0.1616,
+        "reject": 0.1678
+      },
+      "prediction": "refund",
+      "confidence": 0.6706,
+      "entropyBits": 7.9699,
+      "correct": false
+    },
+    {
+      "id": "T-070",
+      "text": "You people are slow but I still need my order changed",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"You people are slow but I still need my order changed\"\nLabel:",
+      "probabilities": {
+        "refund": 0.6901,
+        "review": 0.2163,
+        "reject": 0.0935
+      },
+      "prediction": "refund",
+      "confidence": 0.6901,
+      "entropyBits": 6.7466,
+      "correct": false
+    },
+    {
+      "id": "T-071",
+      "text": "Money back? The box was open but nothing missing",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Money back? The box was open but nothing missing\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7129,
+        "review": 0.1406,
+        "reject": 0.1465
+      },
+      "prediction": "refund",
+      "confidence": 0.7129,
+      "entropyBits": 6.1243,
+      "correct": false
+    },
+    {
+      "id": "T-072",
+      "text": "Kinda want a refund kinda just venting",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Kinda want a refund kinda just venting\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3998,
+        "review": 0.4481,
+        "reject": 0.1521
+      },
+      "prediction": "review",
+      "confidence": 0.4481,
+      "entropyBits": 7.7816,
+      "correct": true
+    },
+    {
+      "id": "T-073",
+      "text": "The price dropped after I bought, any chance of a partial back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The price dropped after I bought, any chance of a partial back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8373,
+        "review": 0.0931,
+        "reject": 0.0696
+      },
+      "prediction": "refund",
+      "confidence": 0.8373,
+      "entropyBits": 6.1496,
+      "correct": true
+    },
+    {
+      "id": "T-074",
+      "text": "My card was charged, I am happy with the item though",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My card was charged, I am happy with the item though\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7191,
+        "review": 0.1343,
+        "reject": 0.1466
+      },
+      "prediction": "refund",
+      "confidence": 0.7191,
+      "entropyBits": 7.9461,
+      "correct": false
+    },
+    {
+      "id": "T-075",
+      "text": "Hello? Anyone there? My thing is about money?",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Hello? Anyone there? My thing is about money?\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8085,
+        "review": 0.112,
+        "reject": 0.0795
+      },
+      "prediction": "refund",
+      "confidence": 0.8085,
+      "entropyBits": 7.0306,
+      "correct": false
+    },
+    {
+      "id": "T-076",
+      "text": "Ok ok ok money money refund now now now please???",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Ok ok ok money money refund now now now please???\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3908,
+        "review": 0.491,
+        "reject": 0.1182
+      },
+      "prediction": "review",
+      "confidence": 0.491,
+      "entropyBits": 7.7484,
+      "correct": false
+    },
+    {
+      "id": "T-077",
+      "text": "Xqzt blorfn wobble quux cake seven",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Xqzt blorfn wobble quux cake seven\"\nLabel:",
+      "probabilities": {
+        "refund": 0.238,
+        "review": 0.6417,
+        "reject": 0.1203
+      },
+      "prediction": "review",
+      "confidence": 0.6417,
+      "entropyBits": 7.5554,
+      "correct": false
+    },
+    {
+      "id": "T-078",
+      "text": "asdf asdf asdf asdf",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"asdf asdf asdf asdf\"\nLabel:",
+      "probabilities": {
+        "refund": 0.2545,
+        "review": 0.5566,
+        "reject": 0.1889
+      },
+      "prediction": "review",
+      "confidence": 0.5566,
+      "entropyBits": 8.5373,
+      "correct": false
+    },
+    {
+      "id": "T-079",
+      "text": "!!! ??? ... ,,,",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"!!! ??? ... ,,,\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7484,
+        "review": 0.2306,
+        "reject": 0.021
+      },
+      "prediction": "refund",
+      "confidence": 0.7484,
+      "entropyBits": 7.5834,
+      "correct": false
+    },
+    {
+      "id": "T-080",
+      "text": "banana phone potato tuesday purple",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"banana phone potato tuesday purple\"\nLabel:",
+      "probabilities": {
+        "refund": 0.1283,
+        "review": 0.7412,
+        "reject": 0.1305
+      },
+      "prediction": "review",
+      "confidence": 0.7412,
+      "entropyBits": 8.9844,
+      "correct": false
+    },
+    {
+      "id": "T-081",
+      "text": "lorem ipsum dolor sit amet consectetur",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"lorem ipsum dolor sit amet consectetur\"\nLabel:",
+      "probabilities": {
+        "refund": 0.1202,
+        "review": 0.841,
+        "reject": 0.0388
+      },
+      "prediction": "review",
+      "confidence": 0.841,
+      "entropyBits": 7.1006,
+      "correct": false
+    },
+    {
+      "id": "T-082",
+      "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\nLabel:",
+      "probabilities": {
+        "refund": 0.2772,
+        "review": 0.5012,
+        "reject": 0.2215
+      },
+      "prediction": "review",
+      "confidence": 0.5012,
+      "entropyBits": 8.3777,
+      "correct": false
+    },
+    {
+      "id": "T-083",
+      "text": "1234567890 0987654321 $$$$ %%%%",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"1234567890 0987654321 $$$$ %%%%\"\nLabel:",
+      "probabilities": {
+        "refund": 0.2785,
+        "review": 0.416,
+        "reject": 0.3055
+      },
+      "prediction": "review",
+      "confidence": 0.416,
+      "entropyBits": 7.7642,
+      "correct": false
+    },
+    {
+      "id": "T-084",
+      "text": "refund refund refund refund refund",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"refund refund refund refund refund\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3552,
+        "review": 0.5198,
+        "reject": 0.125
+      },
+      "prediction": "review",
+      "confidence": 0.5198,
+      "entropyBits": 8.1175,
+      "correct": false
+    },
+    {
+      "id": "T-085",
+      "text": "the the the the the the the",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"the the the the the the the\"\nLabel:",
+      "probabilities": {
+        "refund": 0.0802,
+        "review": 0.8656,
+        "reject": 0.0542
+      },
+      "prediction": "review",
+      "confidence": 0.8656,
+      "entropyBits": 8.0533,
+      "correct": false
+    },
+    {
+      "id": "T-086",
+      "text": "???? I forgot what I wanted to say",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"???? I forgot what I wanted to say\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3856,
+        "review": 0.5538,
+        "reject": 0.0606
+      },
+      "prediction": "review",
+      "confidence": 0.5538,
+      "entropyBits": 8.1936,
+      "correct": false
+    },
+    {
+      "id": "T-087",
+      "text": ".",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \".\"\nLabel:",
+      "probabilities": {
+        "refund": 0.1273,
+        "review": 0.8194,
+        "reject": 0.0533
+      },
+      "prediction": "review",
+      "confidence": 0.8194,
+      "entropyBits": 6.6408,
+      "correct": false
+    },
+    {
+      "id": "T-088",
+      "text": "Hi",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Hi\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4904,
+        "review": 0.4565,
+        "reject": 0.0531
+      },
+      "prediction": "refund",
+      "confidence": 0.4904,
+      "entropyBits": 4.6078,
+      "correct": false
+    },
+    {
+      "id": "T-089",
+      "text": "test test test, ignore this",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"test test test, ignore this\"\nLabel:",
+      "probabilities": {
+        "refund": 0.3422,
+        "review": 0.5948,
+        "reject": 0.063
+      },
+      "prediction": "review",
+      "confidence": 0.5948,
+      "entropyBits": 6.3804,
+      "correct": false
+    },
+    {
+      "id": "T-090",
+      "text": "qwerty uiop zxcv bnm",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"qwerty uiop zxcv bnm\"\nLabel:",
+      "probabilities": {
+        "refund": 0.2059,
+        "review": 0.3378,
+        "reject": 0.4563
+      },
+      "prediction": "reject",
+      "confidence": 0.4563,
+      "entropyBits": 8.5201,
+      "correct": true
+    },
+    {
+      "id": "T-091",
+      "text": "refund me for the thing that broke yesterday please thanks",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"refund me for the thing that broke yesterday please thanks\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4992,
+        "review": 0.3567,
+        "reject": 0.1442
+      },
+      "prediction": "refund",
+      "confidence": 0.4992,
+      "entropyBits": 5.0596,
+      "correct": true
+    },
+    {
+      "id": "T-092",
+      "text": "My statement shows a duplicate $14.50 charge from you",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My statement shows a duplicate $14.50 charge from you\"\nLabel:",
+      "probabilities": {
+        "refund": 0.8492,
+        "review": 0.0935,
+        "reject": 0.0573
+      },
+      "prediction": "refund",
+      "confidence": 0.8492,
+      "entropyBits": 7.2721,
+      "correct": true
+    },
+    {
+      "id": "T-093",
+      "text": "Can I get the manual for the air fryer in English",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Can I get the manual for the air fryer in English\"\nLabel:",
+      "probabilities": {
+        "refund": 0.1687,
+        "review": 0.812,
+        "reject": 0.0193
+      },
+      "prediction": "review",
+      "confidence": 0.812,
+      "entropyBits": 7.0626,
+      "correct": true
+    },
+    {
+      "id": "T-094",
+      "text": "My delivery slot was missed twice, still need the groceries",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"My delivery slot was missed twice, still need the groceries\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5899,
+        "review": 0.1649,
+        "reject": 0.2452
+      },
+      "prediction": "refund",
+      "confidence": 0.5899,
+      "entropyBits": 6.6845,
+      "correct": false
+    },
+    {
+      "id": "T-095",
+      "text": "WINNER you won a free iPhone, claim at shady.link",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"WINNER you won a free iPhone, claim at shady.link\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5102,
+        "review": 0.18,
+        "reject": 0.3098
+      },
+      "prediction": "refund",
+      "confidence": 0.5102,
+      "entropyBits": 8.773,
+      "correct": false
+    },
+    {
+      "id": "T-096",
+      "text": "The lamp flickers sometimes, should I return it or is it the bulb",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"The lamp flickers sometimes, should I return it or is it the bulb\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5817,
+        "review": 0.174,
+        "reject": 0.2443
+      },
+      "prediction": "refund",
+      "confidence": 0.5817,
+      "entropyBits": 6.7737,
+      "correct": false
+    },
+    {
+      "id": "T-097",
+      "text": "Empty box arrived, no item inside, need replacement or money back",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Empty box arrived, no item inside, need replacement or money back\"\nLabel:",
+      "probabilities": {
+        "refund": 0.7521,
+        "review": 0.1522,
+        "reject": 0.0957
+      },
+      "prediction": "refund",
+      "confidence": 0.7521,
+      "entropyBits": 7.3589,
+      "correct": true
+    },
+    {
+      "id": "T-098",
+      "text": "zzz snore my ticket is boring",
+      "gold": "reject",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"zzz snore my ticket is boring\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4438,
+        "review": 0.4506,
+        "reject": 0.1057
+      },
+      "prediction": "review",
+      "confidence": 0.4506,
+      "entropyBits": 8.2917,
+      "correct": false
+    },
+    {
+      "id": "T-099",
+      "text": "Help me track my refund for order #5510",
+      "gold": "review",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"Help me track my refund for order #5510\"\nLabel:",
+      "probabilities": {
+        "refund": 0.5117,
+        "review": 0.2032,
+        "reject": 0.2851
+      },
+      "prediction": "refund",
+      "confidence": 0.5117,
+      "entropyBits": 8.0495,
+      "correct": false
+    },
+    {
+      "id": "T-100",
+      "text": "You double-billed my annual plan, I am furious, fix now",
+      "gold": "refund",
+      "prompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\n\nTicket: \"I was charged twice for $18, please give it back\"\nLabel: refund\nTicket: \"Where is my order? Tracking says delivered\"\nLabel: review\nTicket: \"MAKE MONEY FAST click here bit.ly/xyz win prize now\"\nLabel: reject\nTicket: \"You double-billed my annual plan, I am furious, fix now\"\nLabel:",
+      "probabilities": {
+        "refund": 0.4515,
+        "review": 0.3985,
+        "reject": 0.15
+      },
+      "prediction": "refund",
+      "confidence": 0.4515,
+      "entropyBits": 8.31,
+      "correct": true
+    }
+  ]
+}

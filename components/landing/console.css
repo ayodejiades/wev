@@ -1,0 +1,304 @@
+/* components/landing/console.css — the wev console: eight real windows on one flat
+   ground, in the spirit of a 1980s desktop.
+
+   Rules this file keeps:
+   - No gradients and no blur. The screen texture is a 1px dot tile drawn as an SVG
+     pattern; every surface is a flat fill with a 2px ink edge and a hard offset
+     shadow, so depth comes from the shadow, never from a wash of colour.
+   - Every colour is a landing token (--accent --surface --raised --ink --muted), so
+     the console follows the product's design instead of owning a second palette.
+   - Colour is never the only carrier of meaning: every window also prints its state
+     in text, and every focus ring keeps 3:1 against both the ground and the paper. */
+
+.wev-console {
+  /* The dot screen is defined once on :root (app/globals.css); the console ground, the
+     empty-table row and the CTA strip all read the same tile from there. */
+  position: relative;
+  margin: 0;
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.12'/%3E%3Ccircle cx='4.5' cy='4.5' r='1' fill='%23ffffff' fill-opacity='0.12'/%3E%3C/svg%3E");
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow);
+  padding: 0.75rem;
+  font-family: var(--font-landing-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 1024px) {
+  .wev-console {
+    padding: 2rem;
+  }
+}
+
+.wev-console__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .wev-console__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+    align-items: start;
+  }
+}
+
+/* The stamped name in the corner, the way a plotter signs its plate. */
+.wev-plate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-3px, -3px);
+  background: var(--ink);
+  color: var(--surface);
+  padding: 0.15rem 0.4rem;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------- windows
+
+   Note on layers: this file is unlayered, so it beats Tailwind's `@layer utilities`
+   at equal specificity. Anything a caller needs to vary per instance (width, colour)
+   therefore has to be a custom property or a state selector here, not a utility class
+   on the same element. `.wev-win` deliberately sets no width: the grid wrappers size
+   themselves, and the kind-filter buttons set their own. */
+
+.wev-win {
+  display: block;
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 0 var(--ink);
+  text-align: left;
+}
+
+.wev-win__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 0.15rem 0.4rem;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.wev-win__body {
+  display: block;
+  padding: 0.6rem 0.7rem 0.7rem;
+}
+
+/* Pressable windows lift on hover and collapse into their own shadow on press.
+
+   Every rule that MOVES a window lives inside `(hover: hover) and (pointer: fine)`.
+   On a touch device a tap also fires :hover, and that hover is sticky: it survives
+   until the next tap elsewhere. An unconditional lift therefore made a window jump
+   up and to the left on the first tap and stay there, while the overlap and the
+   z-index bump made its neighbours appear to shuffle too. Coarse pointers get the
+   state change (aria-pressed recolours the window) and never a translation, so a
+   tap cannot reflow the console. */
+button.wev-win {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button.wev-win {
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  button.wev-win:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--ink);
+    /* Bring the window forward over its overlapping neighbours. */
+    z-index: 20;
+  }
+
+  button.wev-win:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 0 var(--ink);
+  }
+
+  /* Invert on hover only where hover means "the pointer is here". */
+  .wev-stamp:hover {
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .wev-dither:hover {
+    background-color: var(--raised);
+  }
+}
+
+/* Belt and braces: a coarse pointer never gets a translation, whatever a browser
+   decides to do with :active. `touch-action: manipulation` drops the legacy
+   double-tap delay so a tap on a window feels like a button press, not a page zoom. */
+@media (pointer: coarse) {
+  button.wev-win,
+  button.wev-win:hover,
+  button.wev-win:active {
+    transform: none;
+  }
+
+  .wev-console button,
+  .wev-console a {
+    touch-action: manipulation;
+  }
+}
+
+button.wev-win[aria-pressed="true"] {
+  background: var(--raised);
+}
+
+/* A stamp is an ink block; selecting it swaps it to the accent. The label stays
+   readable at every state, and nothing about it moves. */
+.wev-stamp {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 0.1rem 0.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.wev-stamp[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+.wev-tag {
+  display: inline-block;
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 0 0.3rem;
+  font-size: 10px;
+}
+
+/* The probability scale: precision slide rule bounded [0, 1] with 50% center mark */
+.wev-scale {
+  position: relative;
+  display: block;
+  height: 14px;
+  border: 1px solid var(--ink);
+  background: var(--surface);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.wev-scale__axis {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ink);
+  opacity: 0.35;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.wev-scale__mid {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ink);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.wev-scale__runner-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: color-mix(in oklab, var(--accent) 25%, transparent);
+  border-right: 1.5px solid var(--accent);
+  pointer-events: none;
+}
+
+.wev-scale__mark {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+
+.wev-scale__mark--top {
+  background: var(--ink);
+}
+
+.wev-scale__mark--second {
+  background: var(--surface);
+  border: 1.5px solid var(--ink);
+}
+
+/* The same information as a meter, for one distribution instead of eight cases. */
+.wev-meter {
+  display: block;
+  height: 10px;
+  border: 1px solid var(--ink);
+  background: var(--raised);
+}
+
+.wev-meter__fill {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+}
+
+/* Five invariant cells, the size of a postage stamp. */
+.wev-cells {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.wev-cell {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px solid var(--ink);
+  background: var(--surface);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
+
+.wev-cell[data-passed="true"] {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.wev-dither {
+  background-image: var(--wev-dot);
+  background-color: var(--surface);
+}
+
+.wev-dither:hover {
+  background-color: var(--raised);
+}
+
+/* ---------------------------------------------------------------- focus */
+
+.wev-console :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Windows sit on the ink ground, so their ring has to be the accent colour. */
+.wev-console .wev-win:focus-visible {
+  outline-color: var(--surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.wev-win {
+    transition: none;
+  }
+}

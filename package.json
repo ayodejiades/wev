@@ -1,0 +1,53 @@
+{
+  "name": "wev",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "node --import tsx --test tests/health.test.mjs",
+    "verify:evidence": "tsx tools/verify-evidence.ts",
+    "claim:verify": "tsx tools/verify-evidence.ts",
+    "capture": "tsx tools/capture.ts",
+    "calibrate": "tsx tools/calibrate.ts",
+    "thumbnail": "tsx tools/make-thumbnail.ts",
+    "verify:system": "tsx tools/verify.ts && tsx tools/verify-evidence.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "test:integration": "node --import tsx --test tests/integration.test.mjs",
+    "test:all": "pnpm test && pnpm test:integration"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "utf-8-validate",
+      "bufferutil",
+      "onnxruntime-node"
+    ]
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "next": "16.3.4",
+    "postgres": "3.4.9",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "tailwindcss": "^4",
+    "tsx": "4.23.13",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

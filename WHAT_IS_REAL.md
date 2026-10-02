@@ -1,0 +1,15 @@
+# WHAT_IS_REAL.md: Production Maturity & Boundaries
+
+| Component | Verification Level | Evidence |
+|---|---|---|
+| **Token-distribution kernel (`lib/kernel.ts`)** | **PROVEN_LOCAL_EXECUTION** | 116/116 fixtures verified across `INV-1`..`INV-5` (`pnpm verify:evidence`) |
+| **Calibrated act-or-escalate gate (`evaluateTriageGate`)** | **PROVEN_LOCAL_EXECUTION** | Thresholds autoConfidence=0.5, maxEntropyBits=6 from `evidence/thresholds.json`; 100/100 captured runs reproduce `evidence/calibration.json` (held-out 5/50 auto at 60.0% vs baseline 40.0%, 2 wrong auto) |
+| **Distribution validity gate (`INV-1`)** | **PROVEN_LOCAL_EXECUTION** | Malformed model output fails closed to `ABSTAIN_INVALID_DISTRIBUTION` / `ESCALATE` |
+| **Exportable gate, gate card, receipts (`lib/gate-export.ts`, `lib/receipt.ts`)** | **PROVEN_LOCAL_EXECUTION** | Pasted gate agrees with the kernel on the evidence test cases; receipts round-trip hash + verdict checks (`pnpm test`) |
+| **Local model folder (Experimental)** | **LIMITED_TESTING** | Drop config.json + tokenizer files + single-file onnx weights; nothing uploads. Tested with SmolLM2-135M/360M (uint8) layouts: file mapping, tokenizer load and weight bytes verified off-device; the browser drop itself was not exercised this session. |
+| **Zero-signup `/live`, `/inbox`, `/proof`, & `/verify` surfaces** | **LIVE_IN_BROWSER** | Inspectable in browser with 1-byte tamper detection |
+| **Offline `DEMO_MODE` Fixture Store (`db/index.ts`)** | **LIVE_FALLBACK** | Automatic in-memory fixture store when `DATABASE_URL` is unset |
+| **Fixture provenance (`evidence/campaign-report.json`)** | **HAND_WRITTEN** | The 8 campaign and 8 benchmark distributions are authored, not captured from SmolLM2. They show the kernel applies its thresholds; they do not show the thresholds are calibrated. |
+| **Captured model runs (`evidence/captured-runs.json`)** | **MEASURED_MODEL_EXECUTION** | 100 real onnx-community/SmolLM2-135M-ONNX (uint8) runs, 33/100 correct. Gold labels are SYNTHETIC (hand-written in `data/items.json`). |
+| **Offline operation** | **NOT_OFFLINE_FIRST_RUN** | First load needs network: transformers.js from jsDelivr plus ~130MB of weights (browser HTTP cache after that; `DEMO_MODE` replay is network-free by construction, bundled evidence, local gate, 5s-timeout health probe). The prescribed load-then-go-offline inbox run was not performed this session (no browser), so no works-offline-after-first-load claim is made. |
+| **In-browser tiny model (transformers.js, `lib/wev-model.ts` + `/live`)** | **LIVE_IN_BROWSER** | Top-k renormalized to sum to 1 (`renormalizeTopK`, unit-tested); raw top-k sum + full-vocab entropy shown on screen; kernel thresholds above verified on committed fixtures |

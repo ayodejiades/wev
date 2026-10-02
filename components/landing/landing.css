@@ -1,0 +1,407 @@
+/* components/landing/landing.css — the landing's visual system.
+   Every value is a token set on the .lp root from brief.json "design" (lib/landing.ts):
+   colour   --bg --surface --raised --ink --muted --line --accent --accent-ink
+   states   --state-clear --state-flagged --state-pending --state-refused
+   shape    --radius --radius-sm --edge --button-edge
+   depth    --shadow --button-shadow --lift --glass --bloom
+   type     --display-weight
+   so one stylesheet renders calm, editorial, neobrutalist, Swiss, terminal or glass looks. */
+
+/* No pill shapes: buttons, tags and chips take the design's small radius. */
+.lp {
+  --pill: var(--radius-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-landing-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11";
+}
+
+.lp ::selection {
+  background: color-mix(in oklab, var(--accent) 22%, transparent);
+}
+
+.lp-display {
+  font-family: var(--font-landing-display, var(--font-landing-sans)), ui-sans-serif, system-ui, sans-serif;
+  font-weight: var(--display-weight, 500);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.lp-mono {
+  font-family: var(--font-landing-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.lp-pretty {
+  text-wrap: pretty;
+}
+
+/* Hero ground: the same 1px dot screen the console sits on — a pattern, not a gradient.
+   Under a brutal preset there is no accent bloom: depth comes from the hard offset
+   shadow, so a wash of colour behind the headline would only soften the type. */
+.lp-bloom {
+  background-color: var(--bg);
+  background-image: var(--wev-dot, none);
+}
+
+/* Coordinate grid: only where a grid carries meaning (the field map). */
+.lp-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Elevated surface: a translucent ring instead of a solid border, so the shadow and the
+   edge never double up. Flat variant for sibling content that needs no lift. */
+.lp-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 var(--edge, 1px) var(--line), var(--shadow);
+  backdrop-filter: var(--glass, none);
+}
+
+.lp-card-flat {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 var(--edge, 1px) var(--line);
+}
+
+.lp-hair {
+  border-color: var(--line);
+}
+
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  height: 3rem;
+  padding: 0 1.25rem;
+  border-radius: var(--pill);
+  font-size: 1rem;
+  font-weight: 500;
+  user-select: none;
+  transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  white-space: nowrap;
+}
+
+.lp-btn:has(> svg:first-child) {
+  padding-left: 1rem;
+}
+
+.lp-btn:has(> svg:last-child) {
+  padding-right: 1rem;
+}
+
+@media (hover: hover) {
+  .lp-btn:hover:not(:disabled) {
+    transform: translate(var(--lift, 0px), var(--lift, 0px));
+  }
+}
+
+.lp-btn:active:not(:disabled) {
+  transform: translate(calc(var(--lift, 0px) * -1), calc(var(--lift, 0px) * -1)) scale(0.98);
+  box-shadow: 0 0 0 var(--button-edge, 0px) var(--line);
+}
+
+.lp-btn:focus-visible,
+.lp-focus:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lp-btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 0 0 var(--button-edge, 0px) var(--line), var(--button-shadow);
+}
+
+.lp-btn-primary:hover {
+  background: color-mix(in oklab, var(--accent) 88%, var(--ink));
+}
+
+/* High-contrast ink button with hard electric-blue offset shadow */
+.lp-btn-accent {
+  background: var(--ink);
+  color: #ffffff;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 0 var(--accent);
+  font-weight: 600;
+}
+
+.lp-btn-accent:hover {
+  background: var(--ink);
+  color: #ffffff;
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 5.5px 5.5px 0 0 var(--accent);
+}
+
+.lp-btn-accent:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--accent);
+}
+
+.lp-btn-quiet {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 0 0 max(1px, var(--button-edge, 0px)) var(--line), var(--button-shadow);
+}
+
+.lp-btn-quiet:hover {
+  box-shadow: 0 0 0 max(1px, var(--button-edge, 0px)) color-mix(in oklab, var(--ink) 30%, var(--line)), var(--button-shadow);
+}
+
+.lp-btn-sm {
+  height: 2.5rem;
+  padding: 0 0.9rem;
+  font-size: 0.875rem;
+}
+
+.lp-btn-sm:has(> svg:first-child) {
+  padding-left: 0.75rem;
+}
+
+/* 48px touch target on coarse pointers without changing the drawn size. */
+@media (pointer: coarse) {
+  .lp-btn-sm::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 3rem);
+    height: max(100%, 3rem);
+    transform: translate(-50%, -50%);
+  }
+}
+
+.lp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: var(--pill);
+  box-shadow: 0 0 0 max(1px, calc(var(--edge, 1px) - 1px)) var(--line);
+  background: color-mix(in oklab, var(--surface) 80%, transparent);
+  padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* Decision states: precision hardware stamps in mono */
+.lp-state {
+  --tone: var(--state-refused);
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-landing-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  padding: 0.2rem 0.5rem;
+  color: var(--tone);
+  background: color-mix(in oklab, var(--tone) 8%, var(--surface));
+  border: 1.5px solid var(--tone);
+  box-shadow: 1.5px 1.5px 0 0 color-mix(in oklab, var(--tone) 30%, transparent);
+}
+
+[data-state="clear"] { --tone: var(--state-clear); }
+[data-state="flagged"] { --tone: var(--state-flagged); }
+[data-state="pending"] { --tone: var(--state-pending); }
+[data-state="refused"] { --tone: var(--state-refused); }
+
+.lp-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--tone, var(--muted));
+}
+
+.lp-quote {
+  border-left: 2px solid color-mix(in oklab, var(--accent) 60%, var(--line));
+  padding-left: 0.85rem;
+}
+
+.lp-scroll-x {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lp-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+.lp-veil {
+  opacity: 0.42;
+  filter: saturate(0.6) blur(1.5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes lp-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.lp-rise {
+  animation: lp-rise 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-rise { animation: none; }
+  .lp-btn { transition: none; }
+}
+
+/* ---------------------------------------------------------------- phone frames
+   Neobrutalist device mockups: flat black chassis, 2px ink edges, hard offset
+   shadows, zero radius on outer shell (inner screen gets the system radius).
+   No gradients, no glass specular, no blur: depth from the shadow only. */
+
+.phone {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 10 / 19.5;
+  padding: 6px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 4px 4px 0 0 var(--ink);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .phone:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--ink);
+  }
+}
+
+/* Side hardware buttons (volume/power) */
+.phone::before {
+  content: "";
+  position: absolute;
+  top: 40px;
+  left: -4px;
+  width: 2px;
+  height: 18px;
+  background: var(--ink);
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 24px 0 0 var(--ink), 0 50px 0 0 var(--ink);
+}
+
+.phone-screen {
+  position: relative;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.ph-notch {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28%;
+  height: 10px;
+  background: var(--ink);
+  border-radius: 10px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 4px;
+}
+
+.ph-lens {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.ph-status {
+  position: relative;
+  z-index: 21;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px 2px;
+  font-family: var(--font-landing-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.ph-time { font-weight: 700; letter-spacing: 0.02em; }
+.ph-status-icons { display: inline-flex; align-items: center; gap: 3px; }
+
+.ph-home {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 2.5px;
+  background: var(--ink);
+  opacity: 0.3;
+  border-radius: 2px;
+  z-index: 20;
+}
+
+/* ---------------------------------------------------------------- FAQ accordion
+   Native <details>/<summary>: works without JS, keyboard accessible. */
+
+.lp-faq {
+  border-top: 2px solid var(--line);
+}
+
+.lp-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  transition: color 120ms ease;
+}
+
+.lp-faq summary::-webkit-details-marker { display: none; }
+
+.lp-faq summary::after {
+  content: "+";
+  flex: none;
+  font-family: var(--font-landing-mono), ui-monospace, monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform 200ms ease;
+}
+
+.lp-faq[open] summary::after {
+  content: "−";
+}
+
+.lp-faq summary:hover {
+  color: var(--accent);
+}
+
+.lp-faq .lp-faq__body {
+  padding: 0 0 1.25rem;
+  max-width: 56ch;
+}

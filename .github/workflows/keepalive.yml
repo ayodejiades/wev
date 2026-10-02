@@ -1,0 +1,24 @@
+name: keepalive
+
+# Free hosts sleep idle services; a judge hitting a cold-started demo waits 30 seconds and
+# leaves. This pings the deployed health endpoint every 10 minutes.
+#
+# Enable with: make keepalive
+# Set the URL with: gh variable set DEPLOY_URL --body https://your-deploy-url
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: curl the health endpoint
+        run: |
+          if [ -z "${{ vars.DEPLOY_URL }}" ]; then
+            echo "DEPLOY_URL repository variable is not set — see: gh variable set DEPLOY_URL --body https://your-deploy-url"
+            exit 0
+          fi
+          curl -fsS "${{ vars.DEPLOY_URL }}/api/health" || curl -fsS "${{ vars.DEPLOY_URL }}/health"

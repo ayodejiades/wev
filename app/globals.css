@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* brutal — neobrutalist: flat cream ground, pure black 2px edges on every surface,
+   hard offset shadows (never blurred), zero radius, one clashing accent. No
+   gradients, no glass, no soft shadow: depth comes from the offset, not from a
+   wash of colour. The dot screen on the landing console is an SVG tile, so the
+   texture never costs a gradient either. */
+:root {
+  --bg: #f5f1e8;
+  --fg: #0a0a0a;
+  --fg-muted: #4a4a4a;
+  --surface: #ffffff;
+  --surface-raised: #ece8df;
+  --border: #000000;
+  --accent: #0047ff;
+  --accent-contrast: #ffffff;
+  --radius: 0px;
+  --radius-sm: 0px;
+  --shadow: 6px 6px 0 #000;
+  /* One dot screen for the whole product: a 1px diagonal dot tile as an SVG data URI,
+     so the texture is a pattern rather than a gradient. Shared by the hero ground and
+     by every window on the landing console. */
+  --wev-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='1' cy='1' r='1' fill='%230a0a0a' fill-opacity='0.34'/%3E%3Ccircle cx='4.5' cy='4.5' r='1' fill='%230a0a0a' fill-opacity='0.34'/%3E%3C/svg%3E");
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

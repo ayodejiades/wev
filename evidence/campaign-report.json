@@ -1,0 +1,398 @@
+{
+  "cases": [
+    {
+      "candidates": [
+        {
+          "prob": 0.88,
+          "token": "Paris"
+        },
+        {
+          "prob": 0.06,
+          "token": "Lyon"
+        },
+        {
+          "prob": 0.03,
+          "token": "Marseille"
+        },
+        {
+          "prob": 0.02,
+          "token": "Nice"
+        },
+        {
+          "prob": 0.01,
+          "token": "Lille"
+        }
+      ],
+      "caseId": "WEV-01",
+      "category": "benign-control",
+      "expectedState": "BENIGN_CONTROL_DOMINANT",
+      "prompt": "The capital of France is",
+      "title": "Dominant capital (benign control)",
+      "display": {
+        "title": "Paris wins at 88%, textbook confident",
+        "state": "clear",
+        "verdict": "Confident · Paris 88%",
+        "reason": "One token dominates with 0.74 bits of entropy. This is what certainty looks like.",
+        "facts": [
+          {
+            "label": "Top token",
+            "value": "Paris"
+          },
+          {
+            "label": "Probability",
+            "value": "88.0%"
+          },
+          {
+            "label": "Entropy",
+            "value": "0.74 bits"
+          }
+        ]
+      }
+    },
+    {
+      "candidates": [
+        {
+          "prob": 0.68,
+          "token": "Celsius"
+        },
+        {
+          "prob": 0.17,
+          "token": "Fahrenheit"
+        },
+        {
+          "prob": 0.08,
+          "token": "Kelvin"
+        },
+        {
+          "prob": 0.04,
+          "token": "Rankine"
+        },
+        {
+          "prob": 0.03,
+          "token": "Réaumur"
+        }
+      ],
+      "caseId": "WEV-02",
+      "category": "happy-path",
+      "expectedState": "CONFIDENT_CONTINUE",
+      "prompt": "Water boils at 100 degrees",
+      "title": "Clear unit continuation",
+      "display": {
+        "title": "Celsius continues at 68%",
+        "state": "clear",
+        "verdict": "Confident · Celsius 68%",
+        "reason": "Clear lead, 1.44 bits of entropy, margin 0.51. Confident enough to continue.",
+        "facts": [
+          {
+            "label": "Top token",
+            "value": "Celsius"
+          },
+          {
+            "label": "Probability",
+            "value": "68.0%"
+          },
+          {
+            "label": "Entropy",
+            "value": "1.44 bits"
+          }
+        ]
+      }
+    },
+    {
+      "candidates": [
+        {
+          "prob": 0.31,
+          "token": "practice"
+        },
+        {
+          "prob": 0.27,
+          "token": "immersion"
+        },
+        {
+          "prob": 0.18,
+          "token": "reading"
+        },
+        {
+          "prob": 0.14,
+          "token": "speaking"
+        },
+        {
+          "prob": 0.1,
+          "token": "listening"
+        }
+      ],
+      "caseId": "WEV-03",
+      "category": "uncertain",
+      "expectedState": "UNCERTAIN_FLAG",
+      "prompt": "The best way to learn a language is",
+      "title": "Open-ended opinion splits the vote",
+      "display": {
+        "title": "Five good answers, no winner",
+        "state": "flagged",
+        "verdict": "Uncertain · high entropy",
+        "reason": "practice leads at 31% with 2.21 bits of entropy. The inspector flags it instead of bluffing.",
+        "facts": [
+          {
+            "label": "Top token",
+            "value": "practice"
+          },
+          {
+            "label": "Probability",
+            "value": "31.0%"
+          },
+          {
+            "label": "Entropy",
+            "value": "2.21 bits"
+          }
+        ]
+      }
+    },
+    {
+      "candidates": [
+        {
+          "prob": 0.22,
+          "token": "the"
+        },
+        {
+          "prob": 0.21,
+          "token": "a"
+        },
+        {
+          "prob": 0.2,
+          "token": "of"
+        },
+        {
+          "prob": 0.19,
+          "token": "to"
+        },
+        {
+          "prob": 0.18,
+          "token": "and"
+        }
+      ],
+      "caseId": "WEV-04",
+      "category": "refusal",
+      "expectedState": "ABSTAIN_FLAT_DISTRIBUTION",
+      "prompt": "Xqzt blorfn wobble quux",
+      "title": "Gibberish prompt, flat field (must refuse)",
+      "display": {
+        "title": "Gibberish in, honesty out",
+        "state": "refused",
+        "verdict": "Refused · no favourite",
+        "reason": "Top token 22%: a coin flip. Refused rather than presented as knowledge.",
+        "facts": [
+          {
+            "label": "Top token",
+            "value": "the"
+          },
+          {
+            "label": "Probability",
+            "value": "22.0%"
+          },
+          {
+            "label": "Entropy",
+            "value": "2.32 bits"
+          }
+        ]
+      }
+    },
+    {
+      "candidates": [
+        {
+          "prob": 0.5,
+          "token": "Paris"
+        },
+        {
+          "prob": 0.15,
+          "token": "Lyon"
+        },
+        {
+          "prob": 0.05,
+          "token": "Marseille"
+        },
+        {
+          "prob": 0.01,
+          "token": "Nice"
+        },
+        {
+          "prob": 0.01,
+          "token": "Lille"
+        }
+      ],
+      "caseId": "WEV-05",
+      "category": "refusal",
+      "expectedState": "ABSTAIN_INVALID_DISTRIBUTION",
+      "prompt": "The capital of France is",
+      "title": "Corrupt probabilities sum to 0.72 (must refuse)",
+      "display": {
+        "title": "Broken probabilities, caught",
+        "state": "refused",
+        "verdict": "Refused · corrupt output",
+        "reason": "Candidates sum to 0.72, not 1. The validity gate fails closed.",
+        "facts": [
+          {
+            "label": "Top token",
+            "value": "Paris"
+          },
+          {
+            "label": "Probability",
+            "value": "50.0%"
+          },
+          {
+            "label": "Sum",
+            "value": "0.72, not 1.00"
+          }
+        ]
+      }
+    },
+    {
+      "candidates": [
+        {
+          "prob": 0.45,
+          "token": "Jupiter"
+        },
+        {
+          "prob": 0.32,
+          "token": "Saturn"
+        },
+        {
+          "prob": 0.12,
+          "token": "Neptune"
+        },
+        {
+          "prob": 0.07,
+          "token": "Uranus"
+        },
+        {
+          "prob": 0.04,
+          "token": "Earth"
+        }
+      ],
+      "caseId": "WEV-06",
+      "category": "tricky-but-fine",
+      "expectedState": "UNCERTAIN_FLAG",
+      "prompt": "The largest planet in our solar system is",
+      "title": "Tricky runner-up closes in (flagged, not bluffed)",
+      "display": {
+        "title": "Jupiter leads, Saturn closes in",
+        "state": "flagged",
+        "verdict": "Uncertain · close race",
+        "reason": "Margin 0.13 under the 0.15 bar. Flagged, not bluffed.",
+        "facts": [
+          {
+            "label": "Top token",
+            "value": "Jupiter"
+          },
+          {
+            "label": "Probability",
+            "value": "45.0%"
+          },
+          {
+            "label": "Margin",
+            "value": "0.13, bar 0.15"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "WEV-07",
+      "title": "Choice decision: refund, review, or reject",
+      "category": "decision-choice",
+      "prompt": "Customer was charged twice for $18",
+      "kind": "choice",
+      "candidates": [
+        {
+          "token": "refund",
+          "prob": 0.62
+        },
+        {
+          "token": "review",
+          "prob": 0.25
+        },
+        {
+          "token": "reject",
+          "prob": 0.13
+        }
+      ],
+      "expectedState": "CONFIDENT_CONTINUE",
+      "display": {
+        "title": "Refund wins at 62%, typed choice",
+        "state": "clear",
+        "verdict": "Confident · refund 62%",
+        "reason": "A decision, not a guess: three fixed options, refund leads with margin 0.37.",
+        "facts": [
+          {
+            "label": "Decision",
+            "value": "refund"
+          },
+          {
+            "label": "Confidence",
+            "value": "62.0%"
+          },
+          {
+            "label": "Entropy",
+            "value": "1.31 bits"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "WEV-08",
+      "title": "Score decision: urgency levels with expected value",
+      "category": "decision-score",
+      "prompt": "Rate the urgency of this support ticket",
+      "kind": "score",
+      "candidates": [
+        {
+          "token": "low",
+          "prob": 0.05
+        },
+        {
+          "token": "medium",
+          "prob": 0.15
+        },
+        {
+          "token": "high",
+          "prob": 0.65
+        },
+        {
+          "token": "urgent",
+          "prob": 0.15
+        }
+      ],
+      "expectedState": "CONFIDENT_CONTINUE",
+      "display": {
+        "title": "Urgency scores high, expected level 2.9",
+        "state": "clear",
+        "verdict": "Confident · level 2.9",
+        "reason": "Ordered levels collapse to an expected value of 2.9. Code routes it; nobody squints at bars.",
+        "facts": [
+          {
+            "label": "Top level",
+            "value": "high"
+          },
+          {
+            "label": "Expected value",
+            "value": "2.90"
+          },
+          {
+            "label": "Entropy",
+            "value": "1.44 bits"
+          }
+        ]
+      }
+    }
+  ],
+  "extractionModel": "structured-schema-strict",
+  "generatedAt": "2026-10-01T15:24:09.718Z",
+  "mechanismVersion": "deterministic-inspector-kernel-v1",
+  "summary": {
+    "confidentContinuations": "3 / 8",
+    "dominantControls": "1 / 8",
+    "uncertaintyFlags": "2 / 8",
+    "abstentions": "2 / 2",
+    "calibrationNote": "Computed live by tools/verify-evidence.ts executing evaluateDeterministicKernel() and evaluateSafetyKernel() across all committed fixtures.",
+    "invariantsPassed": "5 / 5"
+  },
+  "verificationMode": "NOT_RUN"
+}

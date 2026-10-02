@@ -1,0 +1,110 @@
+# ==============================================================================
+# Default-ignore everything
+# ==============================================================================
+/*
+/.*
+
+# ==============================================================================
+# Whitelist configuration & files needed for submission
+# ==============================================================================
+!.gitignore
+!.env.example
+!LICENSE
+!Makefile
+!README.md
+!WHAT_IS_REAL.md
+!brief.json
+!drizzle.config.ts
+!eslint.config.mjs
+!next.config.ts
+!next-env.d.ts
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!postcss.config.mjs
+!tailwind.config.ts
+!tsconfig.json
+!vercel.json
+
+# ==============================================================================
+# Whitelist directories needed for submission
+# ==============================================================================
+!.github/
+!app/
+!components/
+!data/
+!db/
+!evidence/
+!fixtures/
+!lib/
+!public/
+!tests/
+!tools/
+
+# ==============================================================================
+# Specifically ignored: internal kit, checklist, and agent docs
+# ==============================================================================
+/SUBMISSION.md
+/submission.md
+/docs/
+/docs/**
+/.kit
+/.kit/**
+/SUBMISSION_CHECKLIST*
+/submission_checklist*
+/AGENTS.md
+/agents.md
+/CREDITS.md
+/credits.md
+/DESIGN.md
+/design.md
+/CLAIM_LEDGER.md
+/claim_ledger.md
+/PROGRESS.md
+/progress.md
+
+# ==============================================================================
+# Build artifacts & dependencies
+# ==============================================================================
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
+# ==============================================================================
+# Python
+# ==============================================================================
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# ==============================================================================
+# System & Editors
+# ==============================================================================
+.DS_Store
+**/.DS_Store
+.vscode/
+.idea/
+.claude/
+.gstack/
+.vercel/
+
+# ==============================================================================
+# Environment variables & secrets (preserve .env.example)
+# ==============================================================================
+.env*
+!.env.example
+
+# ==============================================================================
+# Media / video binaries produced into repo
+# ==============================================================================
+public/audio/
+docs/demo.mp4
+docs/fallback.mp4
+docs/*.gif
