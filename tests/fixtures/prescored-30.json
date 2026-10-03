@@ -1,0 +1,392 @@
+[
+  {
+    "id": "T-001",
+    "text": "I was charged twice for $18, please give it back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.78,
+      "review": 0.14,
+      "reject": 0.08
+    },
+    "entropyBits": 0.9682,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-002",
+    "text": "My card shows two $22 payments for one order",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8,
+      "review": 0.13,
+      "reject": 0.07
+    },
+    "entropyBits": 0.9087,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-003",
+    "text": "The blender arrived cracked, I want a refund",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.82,
+      "review": 0.12,
+      "reject": 0.06
+    },
+    "entropyBits": 0.8454,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-004",
+    "text": "Package never arrived and tracking is dead, refund me",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8156,
+      "review": 0.1359,
+      "reject": 0.0485
+    },
+    "entropyBits": 0.8429,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-005",
+    "text": "You billed me after I cancelled, return my $45",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8037,
+      "review": 0.1215,
+      "reject": 0.0748
+    },
+    "entropyBits": 0.9027,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-006",
+    "text": "Wrong size shirt sent, I paid for express, refund the difference",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8041,
+      "review": 0.1237,
+      "reject": 0.0722
+    },
+    "entropyBits": 0.8997,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-007",
+    "text": "My kid ordered $60 of coins by accident, please refund",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8,
+      "review": 0.14,
+      "reject": 0.06
+    },
+    "entropyBits": 0.8982,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-008",
+    "text": "Refund my last month, the app never worked",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.82,
+      "review": 0.13,
+      "reject": 0.05
+    },
+    "entropyBits": 0.8335,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-009",
+    "text": "I returned the headphones last week, where is my $89 back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8077,
+      "review": 0.1154,
+      "reject": 0.0769
+    },
+    "entropyBits": 0.893,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-010",
+    "text": "Double charge on my invoice #4412, fix it",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8038,
+      "review": 0.1308,
+      "reject": 0.0654
+    },
+    "entropyBits": 0.8944,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-011",
+    "text": "The hotel cancelled on us, we want our deposit back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8041,
+      "review": 0.134,
+      "reject": 0.0619
+    },
+    "entropyBits": 0.89,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-012",
+    "text": "Trial ended yesterday but I was charged $29 anyway",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8248,
+      "review": 0.1237,
+      "reject": 0.0515
+    },
+    "entropyBits": 0.8225,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-013",
+    "text": "My order came with one shoe missing, send money back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.7885,
+      "review": 0.1346,
+      "reject": 0.0769
+    },
+    "entropyBits": 0.9443,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-014",
+    "text": "I paid for next-day and it took a week, I want that fee back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8077,
+      "review": 0.125,
+      "reject": 0.0673
+    },
+    "entropyBits": 0.8859,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-015",
+    "text": "Subscription renewed without warning, cancel and refund",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8269,
+      "review": 0.1154,
+      "reject": 0.0577
+    },
+    "entropyBits": 0.8237,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-016",
+    "text": "The screen protector does not fit my phone, refund please",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8042,
+      "review": 0.1443,
+      "reject": 0.0515
+    },
+    "entropyBits": 0.8762,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-017",
+    "text": "Charged $12.99 three times for one coffee subscription",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.7921,
+      "review": 0.1287,
+      "reject": 0.0792
+    },
+    "entropyBits": 0.9368,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-018",
+    "text": "Concert was cancelled, when do I get my $75 back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8119,
+      "review": 0.1188,
+      "reject": 0.0693
+    },
+    "entropyBits": 0.8761,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-019",
+    "text": "My account was debited twice this morning",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8077,
+      "review": 0.1346,
+      "reject": 0.0577
+    },
+    "entropyBits": 0.8757,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-020",
+    "text": "Item arrived broken in two pieces, need my money back",
+    "gold": "refund",
+    "probabilities": {
+      "refund": 0.8269,
+      "review": 0.125,
+      "reject": 0.0481
+    },
+    "entropyBits": 0.8123,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-021",
+    "text": "Where is my order? Tracking says delivered but porch is empty",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.204,
+      "review": 0.6327,
+      "reject": 0.1633
+    },
+    "entropyBits": 1.3126,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-022",
+    "text": "How do I change the address on order #8821",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.2038,
+      "review": 0.6214,
+      "reject": 0.1748
+    },
+    "entropyBits": 1.334,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-023",
+    "text": "Can I switch my plan from monthly to yearly",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.2095,
+      "review": 0.6286,
+      "reject": 0.1619
+    },
+    "entropyBits": 1.3187,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-024",
+    "text": "The setup guide step 4 does not match my screen",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.215,
+      "review": 0.6355,
+      "reject": 0.1495
+    },
+    "entropyBits": 1.3023,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-025",
+    "text": "What is your warranty on the kettle I bought",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.1852,
+      "review": 0.6481,
+      "reject": 0.1667
+    },
+    "entropyBits": 1.287,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-026",
+    "text": "My password reset link expired, can you send a new one",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.21,
+      "review": 0.62,
+      "reject": 0.17
+    },
+    "entropyBits": 1.335,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-027",
+    "text": "Do you ship to Taipei, and how long does it take",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.2156,
+      "review": 0.6275,
+      "reject": 0.1569
+    },
+    "entropyBits": 1.3184,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-028",
+    "text": "The invoice has the wrong company name, can you fix it",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.215,
+      "review": 0.6168,
+      "reject": 0.1682
+    },
+    "entropyBits": 1.3393,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-029",
+    "text": "I need a receipt for my expense report for March",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.1905,
+      "review": 0.6476,
+      "reject": 0.1619
+    },
+    "entropyBits": 1.2869,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  },
+  {
+    "id": "T-030",
+    "text": "Which cable fits the 2021 charger, USB-C or Lightning",
+    "gold": "review",
+    "probabilities": {
+      "refund": 0.1963,
+      "review": 0.6542,
+      "reject": 0.1495
+    },
+    "entropyBits": 1.2715,
+    "synthetic": true,
+    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+  }
+]

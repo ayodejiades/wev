@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --import tsx --test tests/health.test.mjs tests/reference.test.mjs tests/reference-tool.test.mjs tests/reference-evidence.test.mjs tests/receipt-evidence.test.mjs",
+    "test": "node --import tsx --test tests/health.test.mjs tests/reference.test.mjs tests/reference-tool.test.mjs tests/reference-evidence.test.mjs tests/receipt-evidence.test.mjs tests/adapters.test.mjs",
     "verify:evidence": "tsx tools/verify-evidence.ts",
     "claim:verify": "tsx tools/verify-evidence.ts",
     "capture": "tsx tools/capture.ts",
@@ -46,6 +46,7 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "playwright": "^1.63.0",
     "tailwindcss": "^4",
     "tsx": "4.23.13",
     "typescript": "^5"

@@ -19,12 +19,75 @@
 
 import { createLogitsAdapter, type DeciderAdapter } from "@/lib/decider";
 import {
+  createLocalServerAdapter,
+  createPrescoredAdapter,
+  parsePrescoredCsv,
+  parsePrescoredJson,
+  type DeciderSpec,
+  type PrescoredRow,
+} from "@/lib/decider";
+import {
   buildInventory,
   createFolderCache,
   validateFolder,
   type DroppedFile,
   type FolderFile,
 } from "@/lib/local-folder";
+
+// ---------------------------------------------------------------------------
+// Adapter choice: "any local model" means one of three concrete things, never a
+// vague promise. Each adapter carries its own model id, and device thresholds
+// live under `wev.thresholds.<modelId>` — never shared across adapters, so a
+// local server's bar can never be inherited from the in-browser model.
+// ---------------------------------------------------------------------------
+
+export type AdapterChoice =
+  | { kind: "server"; baseUrl: string; model: string; fetchImpl?: typeof fetch }
+  | { kind: "prescored"; fileName: string; raw: string };
+
+/** Default local server endpoint (llama.cpp server style). EXPERIMENTAL. */
+export const LOCAL_SERVER_DEFAULT_URL = "http://localhost:8080/v1";
+
+/** Parse a pre-scored CSV/JSON file body into rows (by extension, then content). */
+export function parsePrescoredFile(
+  fileName: string,
+  raw: string,
+  spec: DeciderSpec
+): PrescoredRow[] {
+  const looksJson = /\.json$/i.test(fileName) || raw.trimStart().startsWith("[");
+  return looksJson ? parsePrescoredJson(raw, spec.labels) : parsePrescoredCsv(raw, spec.labels);
+}
+
+/**
+ * Build the chosen non-ONNX adapter, reusing lib/decider.ts implementations —
+ * nothing is reimplemented here. A score-only adapter (pre-scored file) has no
+ * generate(), so `jevify` routes every non-AUTO item to ESCALATE instead of
+ * inventing text. Model ids: `server:<model>` and `prescored:<filename>`.
+ *
+ * The in-browser ONNX adapters are built by loadTriageAdapter /
+ * loadTriageAdapterFromFolder above, which need a browser runtime.
+ */
+export function createAdapterFromChoice(choice: AdapterChoice, spec: DeciderSpec): DeciderAdapter {
+  if (choice.kind === "server") {
+    const base = createLocalServerAdapter({
+      baseUrl: choice.baseUrl,
+      model: choice.model,
+      ...(choice.fetchImpl ? { fetchImpl: choice.fetchImpl } : {}),
+    });
+    return {
+      adapterKind: base.adapterKind,
+      modelId: `server:${choice.model}`,
+      score: (prompt, labels) => base.score(prompt, labels),
+      generate: (input, opts) => base.generate!(input, opts),
+    };
+  }
+  const inner = createPrescoredAdapter(parsePrescoredFile(choice.fileName, choice.raw, spec), spec);
+  return {
+    adapterKind: inner.adapterKind,
+    modelId: `prescored:${choice.fileName}`,
+    score: (prompt, labels) => inner.score(prompt, labels),
+  };
+}
 
 export interface LiveCandidate {
   token: string;

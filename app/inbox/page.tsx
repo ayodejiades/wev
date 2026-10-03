@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard-shell";
-import { ModelPicker } from "@/components/model-picker";
+import { ModelPicker, type AdapterKind } from "@/components/model-picker";
 import { TRIAGE_DECIDER } from "@/lib/decider";
 import { jevify } from "@/lib/jevify";
 import { gateDeciderOutput } from "@/lib/kernel";
@@ -20,7 +20,13 @@ import {
   loadStoredThresholds,
   resolveModelThresholds,
 } from "@/lib/models";
-import { loadTriageAdapter, loadTriageAdapterFromFolder } from "@/lib/wev-model";
+import {
+  LOCAL_SERVER_DEFAULT_URL,
+  createAdapterFromChoice,
+  loadTriageAdapter,
+  loadTriageAdapterFromFolder,
+  parsePrescoredFile,
+} from "@/lib/wev-model";
 import { folderNameFor } from "@/lib/local-folder";
 import { selectInboxIds, summarizeInbox } from "@/lib/inbox";
 import { createReceipt, evidenceFromManifest } from "@/lib/receipt";
@@ -124,6 +130,11 @@ export default function InboxPage() {
   const [customId, setCustomId] = useState("");
   const [stagedFolder, setStagedFolder] = useState<{ name: string; files: File[] } | null>(null);
   const [folderSummary, setFolderSummary] = useState<string | null>(null);
+  const [adapterKind, setAdapterKind] = useState<AdapterKind>("onnx");
+  const [serverUrl, setServerUrl] = useState(LOCAL_SERVER_DEFAULT_URL);
+  const [serverModel, setServerModel] = useState("");
+  const [prescored, setPrescored] = useState<{ fileName: string; raw: string } | null>(null);
+  const [prescoredSummary, setPrescoredSummary] = useState<string | null>(null);
   const [storedAll, setStoredAll] = useState<ReturnType<typeof loadStoredThresholds>>({});
   const appRef = useRef<ReturnType<typeof jevify> | null>(null);
   const cancelRef = useRef(false);
@@ -154,11 +165,19 @@ export default function InboxPage() {
 
   const counters = summarizeInbox(rows.map((r) => ({ auto: r.auto, correct: r.correct })));
   const presetOf = (id: string) => MODEL_PRESETS.find((p) => p.id === id);
-  const activeShort = presetOf(modelId)?.short ?? modelId;
+  /** Thresholds are keyed per model id; an adapter never inherits another's bar. */
+  const activeModelId =
+    adapterKind === "server"
+      ? `server:${serverModel.trim() || "unnamed-server"}`
+      : adapterKind === "prescored"
+      ? `prescored:${prescored?.fileName ?? "no-file"}`
+      : modelId;
+  const activeShort =
+    adapterKind === "onnx" ? (presetOf(modelId)?.short ?? modelId) : activeModelId;
   const activeDtype = presetOf(modelId)?.dtype ?? "uint8";
-  const resolution = resolveModelThresholds(modelId, COMMITTED_THRESHOLDS, storedAll);
+  const resolution = resolveModelThresholds(activeModelId, COMMITTED_THRESHOLDS, storedAll);
   const gateThresholds = resolution.thresholds ?? UNREACHABLE_BAR;
-  const storedMeta = storedAll[modelId] as { calibratedAt?: string; items?: number } | undefined;
+  const storedMeta = storedAll[activeModelId] as { calibratedAt?: string; items?: number } | undefined;
 
   function pickModel(id: string) {
     const clean = id.trim();
@@ -175,6 +194,32 @@ export default function InboxPage() {
       fetchModelSize(clean, "uint8").then((r) =>
         setSizes((s) => ({ ...s, [clean]: r.partial ? `${r.text} (partial)` : r.text }))
       );
+    }
+  }
+
+  function changeAdapter(kind: AdapterKind) {
+    setAdapterKind(kind);
+    setError("");
+    setPrescoredSummary(kind === "prescored" && !prescored ? "No pre-scored file chosen yet." : null);
+  }
+
+  async function pickPrescored(file: File) {
+    setError("");
+    const raw = await file.text();
+    try {
+      const rows = parsePrescoredFile(file.name, raw, TRIAGE_DECIDER);
+      const withoutEntropy = rows.findIndex((r) => r.entropyBits === null || r.entropyBits === undefined);
+      if (withoutEntropy >= 0) {
+        throw new Error(
+          `Pre-scored row ${withoutEntropy} has no entropyBits. The calibrated gate has an entropy bar, so a row without full-vocabulary entropy cannot be gated honestly. Re-export the file with an entropyBits column.`
+        );
+      }
+      setPrescored({ fileName: file.name, raw });
+      setPrescoredSummary(`${file.name}: ${rows.length} pre-scored rows, no model needed.`);
+    } catch (e) {
+      setPrescored(null);
+      setPrescoredSummary(null);
+      setError(e instanceof Error ? e.message : String(e));
     }
   }
 
@@ -227,11 +272,22 @@ export default function InboxPage() {
         : resolution.source === "stored"
         ? `Device thresholds for this model${storedMeta?.items ? ` (${storedMeta.items} items)` : ""}.`
         : "No thresholds for this model: nothing auto-handles. Calibrate it first; thresholds are never reused across models.";
-    setModeNote(`Live: ${modelId} scoring in your browser (first run downloads weights once). ${sourceNote}`);
+    setModeNote(
+      `Live: ${activeModelId} scoring (${adapterKind === "onnx" ? "first run downloads weights once" : adapterKind === "server" ? "EXPERIMENTAL local server, nothing uploaded from this page" : "pre-scored rows replayed, no model needed"}). ${sourceNote}`
+    );
     setPhase("loading");
     let adapter;
     try {
-      if (modelId.startsWith("local-folder:")) {
+      if (adapterKind === "server") {
+        if (!serverModel.trim()) throw new Error("Name the model your local server serves, then run again.");
+        adapter = createAdapterFromChoice(
+          { kind: "server", baseUrl: serverUrl.trim() || LOCAL_SERVER_DEFAULT_URL, model: serverModel.trim() },
+          TRIAGE_DECIDER
+        );
+      } else if (adapterKind === "prescored") {
+        if (!prescored) throw new Error("Choose a pre-scored .csv or .json file first: it supplies the scores.");
+        adapter = createAdapterFromChoice({ kind: "prescored", ...prescored }, TRIAGE_DECIDER);
+      } else if (modelId.startsWith("local-folder:")) {
         const staged = stagedFolder;
         if (!staged || `local-folder:${staged.name}` !== modelId) {
           throw new Error("Drop the local folder again. Nothing is staged to load.");
@@ -251,6 +307,7 @@ export default function InboxPage() {
         );
       }
     } catch (e) {
+      if (adapterKind !== "onnx") throw e; // adapter errors are shown verbatim
       if (presetOf(modelId)) setFailedIds((f) => (f.includes(modelId) ? f : [...f, modelId]));
       throw new Error(explainLoadError(e));
     }
@@ -335,7 +392,7 @@ export default function InboxPage() {
   }
 
   async function copyGate() {
-    if (modelId !== COMMITTED_THRESHOLDS.modelId) {
+    if (activeModelId !== COMMITTED_THRESHOLDS.modelId) {
       setExportNote("This model's gate copies from /calibrate after you calibrate it: test cases must come from its own runs.");
       return;
     }
@@ -345,7 +402,7 @@ export default function InboxPage() {
     }
     const cases = selectGateTestCases(EXPORT_RUNS, gateThresholds);
     const src = buildGateCopyText({
-      modelId,
+      modelId: activeModelId,
       decider: (capturedData as { decider: string }).decider,
       thresholds: gateThresholds,
       cases,
@@ -359,7 +416,7 @@ export default function InboxPage() {
   }
 
   function downloadGateCard() {
-    if (modelId !== COMMITTED_THRESHOLDS.modelId) {
+    if (activeModelId !== COMMITTED_THRESHOLDS.modelId) {
       setExportNote("This model's gate card downloads from /calibrate after you calibrate it: the held-out report here belongs to the committed model.");
       return;
     }
@@ -425,7 +482,7 @@ export default function InboxPage() {
       const receipt = await createReceipt({
         id: row.id,
         input: row.text,
-        modelId,
+        modelId: activeModelId,
         deciderVersion: TRIAGE_DECIDER.version,
         probabilities: row.probabilities,
         confidence: row.confidence,
@@ -464,7 +521,7 @@ export default function InboxPage() {
               </h1>
             </div>
             <p className="mt-1 max-w-2xl text-xs text-[#525252]">
-              {INBOX_IDS.length} of {HELD_TOTAL} held-out synthetic tickets through {activeShort} ({modelId}),
+              {INBOX_IDS.length} of {HELD_TOTAL} held-out synthetic tickets through {activeShort} ({activeModelId}),
               one by one. Gold labels are synthetic (data/items.json).
             </p>
           </div>
@@ -505,6 +562,16 @@ export default function InboxPage() {
           onPick={pickModel}
           folderSummary={folderSummary}
           onPickFolder={pickFolder}
+          adapter={{
+            kind: adapterKind,
+            onAdapterChange: changeAdapter,
+            serverUrl,
+            onServerUrlChange: setServerUrl,
+            serverModel,
+            onServerModelChange: setServerModel,
+            prescoredSummary,
+            onPickPrescored: (file) => void pickPrescored(file),
+          }}
         />
 
         {resolution.source !== "committed" && (

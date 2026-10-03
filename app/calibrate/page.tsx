@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard-shell";
-import { ModelPicker } from "@/components/model-picker";
+import { ModelPicker, type AdapterKind } from "@/components/model-picker";
 import {
   TRIAGE_DECIDER,
   decide,
@@ -17,7 +17,13 @@ import {
   parseLabelledItemsJson,
   type LabelledItem,
 } from "@/lib/decider";
-import { loadTriageAdapter, loadTriageAdapterFromFolder } from "@/lib/wev-model";
+import {
+  LOCAL_SERVER_DEFAULT_URL,
+  createAdapterFromChoice,
+  loadTriageAdapter,
+  loadTriageAdapterFromFolder,
+  parsePrescoredFile,
+} from "@/lib/wev-model";
 import { folderNameFor } from "@/lib/local-folder";
 import {
   MODEL_PRESETS,
@@ -96,6 +102,11 @@ export default function CalibratePage() {
   const [customId, setCustomId] = useState("");
   const [stagedFolder, setStagedFolder] = useState<{ name: string; files: File[] } | null>(null);
   const [folderSummary, setFolderSummary] = useState<string | null>(null);
+  const [adapterKind, setAdapterKind] = useState<AdapterKind>("onnx");
+  const [serverUrl, setServerUrl] = useState(LOCAL_SERVER_DEFAULT_URL);
+  const [serverModel, setServerModel] = useState("");
+  const [prescored, setPrescored] = useState<{ fileName: string; raw: string } | null>(null);
+  const [prescoredSummary, setPrescoredSummary] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const cancelRef = useRef(false);
 
@@ -112,7 +123,6 @@ export default function CalibratePage() {
   }, []);
 
   const presetOf = (id: string) => MODEL_PRESETS.find((p) => p.id === id);
-  const activeShort = presetOf(modelId)?.short ?? modelId;
 
   function pickModel(id: string) {
     const clean = id.trim();
@@ -141,6 +151,45 @@ export default function CalibratePage() {
     const id = `local-folder:${name}`;
     setModelId(id);
     setSizes((s) => ({ ...s, [id]: "local folder · no download" }));
+  }
+
+  /** Model id the thresholds are keyed on: never shared across adapters. */
+  const activeModelId =
+    adapterKind === "server"
+      ? `server:${serverModel.trim() || "unnamed-server"}`
+      : adapterKind === "prescored"
+      ? `prescored:${prescored?.fileName ?? "no-file"}`
+      : modelId;
+  const activeShort =
+    adapterKind === "onnx" ? (presetOf(modelId)?.short ?? modelId) : activeModelId;
+
+  function changeAdapter(kind: AdapterKind) {
+    setAdapterKind(kind);
+    setError("");
+    if (kind === "prescored" && !prescored) {
+      setPrescoredSummary("No pre-scored file chosen yet: pick a .csv or .json above.");
+    }
+    if (kind !== "prescored") setPrescoredSummary(null);
+  }
+
+  async function pickPrescored(file: File) {
+    setError("");
+    const raw = await file.text();
+    try {
+      const rows = parsePrescoredFile(file.name, raw, TRIAGE_DECIDER);
+      const withoutEntropy = rows.findIndex((r) => r.entropyBits === null || r.entropyBits === undefined);
+      if (withoutEntropy >= 0) {
+        throw new Error(
+          `Pre-scored row ${withoutEntropy} has no entropyBits. The calibrated gate has an entropy bar, so a row without full-vocabulary entropy cannot be gated honestly. Re-export the file with an entropyBits column.`
+        );
+      }
+      setPrescored({ fileName: file.name, raw });
+      setPrescoredSummary(`${file.name}: ${rows.length} pre-scored rows, no model needed.`);
+    } catch (e) {
+      setPrescored(null);
+      setPrescoredSummary("");
+      setError(e instanceof Error ? e.message : String(e));
+    }
   }
 
   function checkItems() {
@@ -181,7 +230,20 @@ export default function CalibratePage() {
     try {
       let adapter;
       try {
-        if (modelId.startsWith("local-folder:")) {
+        if (adapterKind === "server") {
+          if (!serverModel.trim()) {
+            throw new Error("Name the model your local server serves, then run again.");
+          }
+          adapter = createAdapterFromChoice(
+            { kind: "server", baseUrl: serverUrl.trim() || LOCAL_SERVER_DEFAULT_URL, model: serverModel.trim() },
+            TRIAGE_DECIDER
+          );
+        } else if (adapterKind === "prescored") {
+          if (!prescored) {
+            throw new Error("Choose a pre-scored .csv or .json file first: it supplies the scores.");
+          }
+          adapter = createAdapterFromChoice({ kind: "prescored", ...prescored }, TRIAGE_DECIDER);
+        } else if (modelId.startsWith("local-folder:")) {
           const staged = stagedFolder;
           if (!staged || `local-folder:${staged.name}` !== modelId) {
             throw new Error("Drop the local folder again. Nothing is staged to load.");
@@ -201,6 +263,7 @@ export default function CalibratePage() {
           );
         }
       } catch (e) {
+        if (adapterKind !== "onnx") throw e; // adapter errors are shown verbatim
         if (presetOf(modelId)) setFailedIds((f) => (f.includes(modelId) ? f : [...f, modelId]));
         throw new Error(explainLoadError(e));
       }
@@ -237,7 +300,10 @@ export default function CalibratePage() {
       }));
       setRows(withVerdicts);
       setThresholds(picked);
-      saveThresholdsForModel(modelId, picked, { calibratedAt: new Date().toISOString(), items: withVerdicts.length });
+      saveThresholdsForModel(activeModelId, picked, {
+        calibratedAt: new Date().toISOString(),
+        items: withVerdicts.length,
+      });
       setExportNote(`Thresholds saved on this device for ${activeShort} (${withVerdicts.length} items).`);
       setCalibReport(gateReport(withVerdicts.filter((r) => calibration.some((c) => c.id === r.id)), picked));
       setHeldReport(gateReport(withVerdicts.filter((r) => heldout.some((h) => h.id === r.id)), picked));
@@ -253,7 +319,7 @@ export default function CalibratePage() {
     try {
       const cases = selectGateTestCases(rows, thresholds);
       const src = buildGateCopyText({
-        modelId,
+        modelId: activeModelId,
         decider: `${TRIAGE_DECIDER.name}@${TRIAGE_DECIDER.version}`,
         thresholds,
         cases,
@@ -273,8 +339,8 @@ export default function CalibratePage() {
     if (!thresholds || !heldReport || !calibReport || rows.length === 0) return;
     try {
       const card = buildGateCard({
-        modelId,
-        dtype: presetOf(modelId)?.dtype ?? "uint8",
+        modelId: activeModelId,
+        dtype: adapterKind === "onnx" ? (presetOf(modelId)?.dtype ?? "uint8") : "n/a",
         decider: `${TRIAGE_DECIDER.name}@${TRIAGE_DECIDER.version}`,
         thresholds,
         seed: CALIBRATION_SEED,
@@ -345,6 +411,16 @@ export default function CalibratePage() {
           onPick={pickModel}
           folderSummary={folderSummary}
           onPickFolder={pickFolder}
+          adapter={{
+            kind: adapterKind,
+            onAdapterChange: changeAdapter,
+            serverUrl,
+            onServerUrlChange: setServerUrl,
+            serverModel,
+            onServerModelChange: setServerModel,
+            prescoredSummary,
+            onPickPrescored: (file) => void pickPrescored(file),
+          }}
         />
 
         {/* Input panel */}
@@ -467,12 +543,17 @@ export default function CalibratePage() {
               <button
                 type="button"
                 data-demo="calibrate-run"
+                data-testid="run-button"
                 onClick={run}
                 style={{ color: "#ffffff", backgroundColor: "#0a0a0a" }}
                 className="w-full sm:w-auto text-center border-2 border-[#0a0a0a] bg-[#0a0a0a] !text-white px-5 py-2.5 font-mono text-xs font-bold shadow-[2px_2px_0_0_#0047ff] hover:-translate-y-0.5 transition-transform cursor-pointer"
               >
                 <span className="!text-white text-white font-bold" style={{ color: "#ffffff" }}>
-                  Score {items.length} items on-device
+                  {adapterKind === "onnx"
+                    ? `Score ${items.length} items on-device`
+                    : adapterKind === "server"
+                    ? `Score ${items.length} items via the local server`
+                    : `Replay ${items.length} pre-scored rows`}
                 </span>
               </button>
             ) : (
@@ -501,7 +582,7 @@ export default function CalibratePage() {
                 />
               )}
             </div>
-            <span className="font-mono text-[11px] text-[#525252]">
+            <span data-testid="status-line" className="font-mono text-[11px] text-[#525252]">
               {phase === "loading"
                 ? `Loading model ${progress}% · ${progressLabel}`
                 : `Item ${rows.length} / ${items?.length ?? 0} · scoring on device`}
@@ -517,7 +598,10 @@ export default function CalibratePage() {
         {phase === "done" && thresholds && heldReport && calibReport && (
           <>
             <section className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-4">
-              <div className="border-2 border-[#0a0a0a] bg-[#ffffff] p-2.5 sm:p-4 shadow-[3px_3px_0_0_#0a0a0a]">
+              <div
+                data-testid="thresholds-block"
+                className="border-2 border-[#0a0a0a] bg-[#ffffff] p-2.5 sm:p-4 shadow-[3px_3px_0_0_#0a0a0a]"
+              >
                 <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a0a]">
                   Your thresholds
                 </div>
@@ -600,6 +684,7 @@ export default function CalibratePage() {
               {rows.map((r) => (
                 <div
                   key={r.id}
+                  data-testid="results-row"
                   className={`border-2 bg-[#ffffff] p-3.5 sm:p-4 shadow-[3px_3px_0_0_#0a0a0a] ${
                     r.auto && !r.correct ? "border-[#dc2626]" : "border-[#0a0a0a]"
                   }`}
