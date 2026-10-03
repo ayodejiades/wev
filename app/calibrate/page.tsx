@@ -599,7 +599,12 @@ export default function CalibratePage() {
         )}
 
         {phase === "error" && (
-          <p className="border-2 border-[#dc2626] bg-[#dc2626]/10 p-3 font-mono text-xs text-[#dc2626]">{error}</p>
+          <p
+            data-testid="error-line"
+            className="border-2 border-[#dc2626] bg-[#dc2626]/10 p-3 font-mono text-xs text-[#dc2626]"
+          >
+            {error}
+          </p>
         )}
 
         {/* Results */}

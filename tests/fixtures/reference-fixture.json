@@ -1,0 +1,617 @@
+{
+  "provider": "test-fixture",
+  "model": "test-fixture-model",
+  "baseUrl": "https://test-fixture.invalid/v1",
+  "decider": "support-ticket-triage@triage-v1",
+  "systemPrompt": "You triage support tickets into exactly one label: refund, review, or reject.\nReply with only the label.\nReply with exactly one label from: refund, review, reject. No other text.",
+  "itemsSha256": "24bdd3cbf2953bb297c389bf6af780779fb156685e3ba47bd9fe7f439cdf8cfc",
+  "generatedAt": "2026-10-03T10:41:24.148Z",
+  "syntheticFixture": true,
+  "agreementWithGold": {
+    "agree": 80,
+    "total": 100,
+    "rate": 0.8
+  },
+  "labels": [
+    {
+      "id": "T-001",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-002",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-003",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-004",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-005",
+      "label": "review",
+      "gold": "refund",
+      "agrees": false
+    },
+    {
+      "id": "T-006",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-007",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-008",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-009",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-010",
+      "label": "review",
+      "gold": "refund",
+      "agrees": false
+    },
+    {
+      "id": "T-011",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-012",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-013",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-014",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-015",
+      "label": "review",
+      "gold": "refund",
+      "agrees": false
+    },
+    {
+      "id": "T-016",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-017",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-018",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-019",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-020",
+      "label": "review",
+      "gold": "refund",
+      "agrees": false
+    },
+    {
+      "id": "T-021",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-022",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-023",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-024",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-025",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-026",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-027",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-028",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-029",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-030",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-031",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-032",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-033",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-034",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-035",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-036",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-037",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-038",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-039",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-040",
+      "label": "refund",
+      "gold": "reject",
+      "agrees": false
+    },
+    {
+      "id": "T-041",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-042",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-043",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-044",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-045",
+      "label": "refund",
+      "gold": "reject",
+      "agrees": false
+    },
+    {
+      "id": "T-046",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-047",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-048",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-049",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-050",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-051",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-052",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-053",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-054",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-055",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-056",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-057",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-058",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-059",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-060",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-061",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-062",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-063",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-064",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-065",
+      "label": "review",
+      "gold": "refund",
+      "agrees": false
+    },
+    {
+      "id": "T-066",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-067",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-068",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-069",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-070",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-071",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-072",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-073",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-074",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-075",
+      "label": "reject",
+      "gold": "review",
+      "agrees": false
+    },
+    {
+      "id": "T-076",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-077",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-078",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-079",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-080",
+      "label": "refund",
+      "gold": "reject",
+      "agrees": false
+    },
+    {
+      "id": "T-081",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-082",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-083",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-084",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-085",
+      "label": "refund",
+      "gold": "reject",
+      "agrees": false
+    },
+    {
+      "id": "T-086",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-087",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-088",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-089",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-090",
+      "label": "refund",
+      "gold": "reject",
+      "agrees": false
+    },
+    {
+      "id": "T-091",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-092",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-093",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-094",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-095",
+      "label": "refund",
+      "gold": "reject",
+      "agrees": false
+    },
+    {
+      "id": "T-096",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-097",
+      "label": "refund",
+      "gold": "refund",
+      "agrees": true
+    },
+    {
+      "id": "T-098",
+      "label": "reject",
+      "gold": "reject",
+      "agrees": true
+    },
+    {
+      "id": "T-099",
+      "label": "review",
+      "gold": "review",
+      "agrees": true
+    },
+    {
+      "id": "T-100",
+      "label": "review",
+      "gold": "refund",
+      "agrees": false
+    }
+  ]
+}

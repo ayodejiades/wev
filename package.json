@@ -9,6 +9,10 @@
     "lint": "eslint",
     "test": "node --import tsx --test --test-concurrency=1 tests/health.test.mjs tests/reference.test.mjs tests/reference-tool.test.mjs tests/reference-evidence.test.mjs tests/receipt-evidence.test.mjs tests/adapters.test.mjs",
     "verify:evidence": "tsx tools/verify-evidence.ts",
+    "test:e2e": "node --import tsx --test tests/e2e.test.mjs",
+    "test:e2e:reference": "bash tools/e2e-reference.sh",
+    "test:e2e:model": "node --import tsx --test tests/e2e-model.test.mjs",
+    "make:reference-fixture": "tsx tools/make-reference-fixture.ts tests/fixtures/reference-fixture.json",
     "claim:verify": "tsx tools/verify-evidence.ts",
     "capture": "tsx tools/capture.ts",
     "calibrate": "tsx tools/calibrate.ts",
@@ -18,7 +22,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "test:integration": "node --import tsx --test tests/integration.test.mjs",
-    "test:all": "pnpm test && pnpm test:integration"
+    "test:all": "pnpm test && pnpm test:integration && pnpm test:e2e && pnpm test:e2e:reference"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

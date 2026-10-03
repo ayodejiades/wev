@@ -10,7 +10,7 @@
     },
     "entropyBits": 0.9682,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-002",
@@ -23,7 +23,7 @@
     },
     "entropyBits": 0.9087,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-003",
@@ -36,20 +36,20 @@
     },
     "entropyBits": 0.8454,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-004",
     "text": "Package never arrived and tracking is dead, refund me",
     "gold": "refund",
     "probabilities": {
-      "refund": 0.8156,
-      "review": 0.1359,
-      "reject": 0.0485
+      "refund": 0.3839,
+      "review": 0.3333,
+      "reject": 0.2828
     },
-    "entropyBits": 0.8429,
+    "entropyBits": 1.5739,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-005",
@@ -62,7 +62,7 @@
     },
     "entropyBits": 0.9027,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-006",
@@ -75,7 +75,7 @@
     },
     "entropyBits": 0.8997,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-007",
@@ -88,7 +88,7 @@
     },
     "entropyBits": 0.8982,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-008",
@@ -101,7 +101,7 @@
     },
     "entropyBits": 0.8335,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-009",
@@ -114,7 +114,7 @@
     },
     "entropyBits": 0.893,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-010",
@@ -127,20 +127,20 @@
     },
     "entropyBits": 0.8944,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-011",
     "text": "The hotel cancelled on us, we want our deposit back",
     "gold": "refund",
     "probabilities": {
-      "refund": 0.8041,
-      "review": 0.134,
-      "reject": 0.0619
+      "refund": 0.3862,
+      "review": 0.3366,
+      "reject": 0.2772
     },
-    "entropyBits": 0.89,
+    "entropyBits": 1.572,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-012",
@@ -153,7 +153,7 @@
     },
     "entropyBits": 0.8225,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-013",
@@ -166,7 +166,7 @@
     },
     "entropyBits": 0.9443,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-014",
@@ -179,7 +179,7 @@
     },
     "entropyBits": 0.8859,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-015",
@@ -192,7 +192,7 @@
     },
     "entropyBits": 0.8237,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-016",
@@ -205,7 +205,7 @@
     },
     "entropyBits": 0.8762,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-017",
@@ -218,20 +218,20 @@
     },
     "entropyBits": 0.9368,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-018",
     "text": "Concert was cancelled, when do I get my $75 back",
     "gold": "refund",
     "probabilities": {
-      "refund": 0.8119,
-      "review": 0.1188,
-      "reject": 0.0693
+      "refund": 0.3961,
+      "review": 0.3267,
+      "reject": 0.2772
     },
-    "entropyBits": 0.8761,
+    "entropyBits": 1.5696,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-019",
@@ -244,7 +244,7 @@
     },
     "entropyBits": 0.8757,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-020",
@@ -257,7 +257,7 @@
     },
     "entropyBits": 0.8123,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-021",
@@ -270,7 +270,7 @@
     },
     "entropyBits": 1.3126,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-022",
@@ -283,7 +283,7 @@
     },
     "entropyBits": 1.334,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-023",
@@ -296,7 +296,7 @@
     },
     "entropyBits": 1.3187,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-024",
@@ -309,20 +309,20 @@
     },
     "entropyBits": 1.3023,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-025",
     "text": "What is your warranty on the kettle I bought",
     "gold": "review",
     "probabilities": {
-      "refund": 0.1852,
-      "review": 0.6481,
-      "reject": 0.1667
+      "refund": 0.38,
+      "review": 0.34,
+      "reject": 0.28
     },
-    "entropyBits": 1.287,
+    "entropyBits": 1.5738,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-026",
@@ -335,7 +335,7 @@
     },
     "entropyBits": 1.335,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-027",
@@ -348,7 +348,7 @@
     },
     "entropyBits": 1.3184,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-028",
@@ -361,7 +361,7 @@
     },
     "entropyBits": 1.3393,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-029",
@@ -374,7 +374,7 @@
     },
     "entropyBits": 1.2869,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   },
   {
     "id": "T-030",
@@ -387,6 +387,6 @@
     },
     "entropyBits": 1.2715,
     "synthetic": true,
-    "note": "SYNTHETIC pre-scored row: probabilities generated from data/items.json by a fixed rule, not produced by any model."
+    "note": "SYNTHETIC pre-scored row for the adapter UI test: probabilities generated from data/items.json by a fixed rule, not produced by any model. Every 7th row is deliberately near-flat so the gate has something to escalate."
   }
 ]
