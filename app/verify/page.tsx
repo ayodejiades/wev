@@ -129,6 +129,7 @@ export default function VerifyPage() {
         hashOk: false,
         verdictOk: false,
         thresholdsMatchCommitted: false,
+        evidenceMatchBuild: false,
         status: "MALFORMED",
         problems: ["receipt is not valid JSON"],
         receipt: null,
@@ -309,8 +310,8 @@ pnpm verify:evidence`}</pre>
               </h2>
               <p className="mt-1 max-w-2xl text-xs text-[#525252]">
                 Paste a receipt copied from the inbox. Re-checks the sha256, recomputes the verdict from
-                the pinned probabilities and thresholds, and compares the thresholds with this build&apos;s
-                committed evidence/thresholds.json.
+                the pinned probabilities and thresholds, and compares both the thresholds and the named
+                calibration evidence with this build&apos;s committed evidence/.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -393,10 +394,50 @@ pnpm verify:evidence`}</pre>
                           receiptCheck.thresholdsMatchCommitted ? "text-[#16a34a] font-bold" : "text-[#d97706] font-bold"
                         }
                       >
-                        {receiptCheck.thresholdsMatchCommitted ? "MATCH" : "DIFFER"}
+{receiptCheck.thresholdsMatchCommitted ? "MATCH" : "DIFFER"}
+                    </span>
+                  </div>
+                  {/* Which calibration evidence the receipt claims (v2+). */}
+                  <div
+                    data-demo="receipt-evidence"
+                    className="border border-[#0a0a0a] bg-[#ece8df] p-2.5 sm:p-3 flex flex-col gap-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#0a0a0a]">Calibration evidence</span>
+                      <span
+                        className={
+                          receiptCheck.evidenceMatchBuild ? "text-[#16a34a] font-bold" : "text-[#d97706] font-bold"
+                        }
+                      >
+                        {receiptCheck.evidenceMatchBuild ? "MATCH" : "DIFFER"}
                       </span>
                     </div>
-                    {receiptCheck.problems.map((p) => (
+                    {receiptCheck.receipt?.evidence ? (
+                      <div className="flex flex-col gap-0.5 text-[10px] text-[#525252]">
+                        <span>
+                          reference model:{" "}
+                          <strong className="text-[#0a0a0a]">
+                            {receiptCheck.receipt.evidence.referenceModel ?? "no reference model recorded"}
+                          </strong>
+                        </span>
+                        <span className="break-all">thresholds {receiptCheck.receipt.evidence.thresholdsSha256}</span>
+                        <span className="break-all">
+                          captured runs {receiptCheck.receipt.evidence.capturedRunsSha256}
+                        </span>
+                        <span className="break-all">
+                          reference{" "}
+                          {receiptCheck.receipt.evidence.referenceSha256 ?? "none recorded (optional)"}
+                        </span>
+                        <span>gold source {receiptCheck.receipt.evidence.goldSource}</span>
+                      </div>
+                    ) : (
+                      <span className="text-[10px] text-[#525252]">
+                        This receipt names no evidence block (version {receiptCheck.receipt?.version ?? "?"}), so
+                        only its hash and verdict can be re-checked here.
+                      </span>
+                    )}
+                  </div>
+                  {receiptCheck.problems.map((p) => (
                       <div key={p} className="border border-[#dc2626] bg-[#dc2626]/10 p-2.5 font-mono text-[11px] text-[#dc2626]">
                         {p}
                       </div>

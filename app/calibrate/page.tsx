@@ -33,6 +33,7 @@ import {
   seededSplit,
 } from "@/lib/calibrate";
 import { buildGateCard, buildGateCopyText, selectGateTestCases } from "@/lib/gate-export";
+import { evidenceFromManifest } from "@/lib/receipt";
 import { copyText } from "@/lib/clipboard";
 import itemsData from "../../data/items.json";
 
@@ -61,6 +62,15 @@ const SAMPLE_30_CSV = [
     (i) => `"${i.text.replace(/"/g, '""')}",${i.gold}`
   )),
 ].join("\n");
+
+/** The committed evidence digests, or null when the manifest is unusable. */
+function safeEvidence() {
+  try {
+    return evidenceFromManifest();
+  } catch {
+    return null;
+  }
+}
 
 function detectFormat(raw: string): "json" | "csv" {
   return raw.trimStart().startsWith("[") ? "json" : "csv";
@@ -282,6 +292,8 @@ export default function CalibratePage() {
         syntheticDataNote: "User-supplied labels scored on-device just now; not independently verified.",
         labelCount: TRIAGE_DECIDER.labels.length,
         totalItems: rows.length,
+        // The committed evidence run, named in the card. Null when it is absent.
+        evidence: safeEvidence(),
       });
       const blob = new Blob([JSON.stringify(card, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);

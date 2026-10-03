@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --import tsx --test tests/health.test.mjs tests/reference.test.mjs tests/reference-tool.test.mjs tests/reference-evidence.test.mjs",
+    "test": "node --import tsx --test tests/health.test.mjs tests/reference.test.mjs tests/reference-tool.test.mjs tests/reference-evidence.test.mjs tests/receipt-evidence.test.mjs",
     "verify:evidence": "tsx tools/verify-evidence.ts",
     "claim:verify": "tsx tools/verify-evidence.ts",
     "capture": "tsx tools/capture.ts",

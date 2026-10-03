@@ -23,7 +23,7 @@ import {
 import { loadTriageAdapter, loadTriageAdapterFromFolder } from "@/lib/wev-model";
 import { folderNameFor } from "@/lib/local-folder";
 import { selectInboxIds, summarizeInbox } from "@/lib/inbox";
-import { createReceipt } from "@/lib/receipt";
+import { createReceipt, evidenceFromManifest } from "@/lib/receipt";
 import { buildGateCard, buildGateCopyText, selectGateTestCases } from "@/lib/gate-export";
 import calibrationData from "../../evidence/calibration.json";
 import capturedData from "../../evidence/captured-runs.json";
@@ -393,6 +393,14 @@ export default function InboxPage() {
       syntheticDataNote: cal.syntheticDataNote,
       labelCount: Object.keys(firstRun.probabilities).length,
       totalItems: (capturedData as { total: number }).total,
+      // The committed evidence run this card's thresholds came from.
+      evidence: (() => {
+        try {
+          return evidenceFromManifest();
+        } catch {
+          return null;
+        }
+      })(),
     });
     const blob = new Blob([JSON.stringify(card, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);

@@ -132,6 +132,18 @@ export interface GateCardInput {
   syntheticDataNote: string;
   labelCount: number;
   totalItems: number;
+  /**
+   * Which calibration evidence backs this gate. Null when the gate was
+   * calibrated on this device from the user's own items and no committed
+   * evidence run applies.
+   */
+  evidence?: {
+    thresholdsSha256: string;
+    capturedRunsSha256: string;
+    referenceSha256: string | null;
+    referenceModel: string | null;
+    goldSource: string;
+  } | null;
 }
 
 /** Gate-card object: everything a developer needs to reuse or audit the gate. */
@@ -158,10 +170,15 @@ export function buildGateCard(input: GateCardInput): Record<string, unknown> {
       total: input.heldout.total,
     },
     calibratedAt: input.calibratedAt,
+    evidence: input.evidence ?? null,
+    referenceModel: input.evidence?.referenceModel ?? null,
     limits: {
       syntheticDataNote: input.syntheticDataNote,
       labels: input.labelCount,
       totalItems: input.totalItems,
+      evidenceNote: input.evidence
+        ? "evidence.* are the sha256 digests of the committed calibration files this gate was checked against (evidence/evidence-manifest.json)."
+        : "No committed evidence run backs this gate: it was calibrated on this device from the user's own items.",
     },
   };
 }
