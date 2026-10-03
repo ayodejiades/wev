@@ -13,13 +13,16 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import {
   CALIBRATION_SEED,
   MIN_CALIBRATION_ITEMS,
   accuracyOf,
+  computeReferenceCheck,
   gateReport,
   pickThresholds,
   seededSplit,
+  type ReferenceRun,
 } from "../lib/calibrate.js";
 
 interface Run {
@@ -33,11 +36,44 @@ interface Run {
   correct: boolean;
 }
 
+interface ReferenceFile {
+  provider?: string;
+  model: string;
+  itemsSha256: string;
+  labels: Array<{ id: string; label: string; gold: string; agrees: boolean }>;
+}
+
+/**
+ * Load evidence/reference-labels.json when it exists (the OPTIONAL second label
+ * source). Returns null when absent — the whole calibration, the evidence
+ * files and the app are built to work without it. A file whose itemsSha256 no
+ * longer matches data/items.json is stale and fatal: mixing labels from a
+ * different item set would silently invent an agreement number.
+ */
+function loadReferenceFile(referencePath: string, itemsPath: string): ReferenceFile | null {
+  if (!fs.existsSync(referencePath)) return null;
+  const raw = fs.readFileSync(referencePath, "utf8");
+  const itemsSha256 = crypto.createHash("sha256").update(fs.readFileSync(itemsPath)).digest("hex");
+  const doc = JSON.parse(raw) as ReferenceFile;
+  if (doc.itemsSha256 !== itemsSha256) {
+    console.error("calibrate FAILED: reference-labels.json is stale (items changed)");
+    process.exit(1);
+  }
+  if (!Array.isArray(doc.labels) || typeof doc.model !== "string") {
+    console.error("calibrate FAILED: reference-labels.json is malformed (need model + labels[])");
+    process.exit(1);
+  }
+  return doc;
+}
+
 async function main() {
   const runsPath = process.env.CALIBRATE_IN ?? path.join(process.cwd(), "evidence", "captured-runs.json");
   const thresholdsPath = process.env.THRESHOLDS_OUT ?? path.join(process.cwd(), "evidence", "thresholds.json");
   const calibrationPath =
     process.env.CALIBRATION_OUT ?? path.join(process.cwd(), "evidence", "calibration.json");
+  const itemsPath = process.env.CALIBRATE_ITEMS_IN ?? path.join(process.cwd(), "data", "items.json");
+  const referencePath =
+    process.env.CALIBRATE_REFERENCE_IN ?? path.join(process.cwd(), "evidence", "reference-labels.json");
   if (!fs.existsSync(runsPath)) {
     console.error(`calibrate FAILED: ${runsPath} missing — run pnpm capture first`);
     process.exit(1);
@@ -99,7 +135,45 @@ async function main() {
     syntheticDataNote:
       "Gold labels are SYNTHETIC (data/items.json, hand-written). Accuracy numbers measure the gate on synthetic tickets with one small model, not real-world performance.",
     generatedAt: new Date().toISOString(),
+    // Present only when evidence/reference-labels.json exists; JSON.stringify
+    // drops an undefined value, so the file is byte-identical without it.
+    referenceCheck: undefined as ReturnType<typeof computeReferenceCheck> | undefined,
   };
+
+  // Optional second label source: score the SAME seeded split against the
+  // reference model's labels too, so the held-out numbers are not resting on
+  // one labeller's opinion alone. Absent file => byte-identical output to before.
+  const reference = fs.existsSync(referencePath) ? loadReferenceFile(referencePath, itemsPath) : null;
+  if (reference) {
+    const referenceById = new Map(reference.labels.map((l) => [l.id, l.label]));
+    const missing = runs.filter((r) => !referenceById.has(r.id)).map((r) => r.id);
+    if (missing.length > 0) {
+      console.error(
+        `calibrate FAILED: reference-labels.json has no label for ${missing.length} captured run(s), first ${missing[0]}`
+      );
+      process.exit(1);
+    }
+    const withReference: ReferenceRun[] = runs.map((r) => ({
+      id: r.id,
+      confidence: r.confidence,
+      entropyBits: r.entropyBits,
+      correct: r.correct,
+      prediction: r.prediction,
+      gold: r.gold,
+      referenceLabel: referenceById.get(r.id)!,
+    }));
+    const referenceSha256 = crypto
+      .createHash("sha256")
+      .update(fs.readFileSync(referencePath))
+      .digest("hex");
+    calibration.referenceCheck = computeReferenceCheck({
+      heldout: withReference.filter((r) => held.some((h) => h.id === r.id)),
+      allRuns: withReference,
+      thresholds: { autoConfidence: thresholds.autoConfidence, maxEntropyBits: thresholds.maxEntropyBits },
+      referenceModel: reference.model,
+      referenceSha256,
+    });
+  }
 
   fs.mkdirSync(path.join(process.cwd(), "evidence"), { recursive: true });
   fs.writeFileSync(thresholdsPath, JSON.stringify(thresholds, null, 2) + "\n");
@@ -112,6 +186,12 @@ async function main() {
       `acc@coverage=${(heldReport.accuracyAtCoverage * 100).toFixed(1)}% ` +
       `(baseline ${(heldReport.baselineAccuracy * 100).toFixed(1)}%, wrong auto=${heldReport.wrongAutoActions})`
   );
+  if (calibration.referenceCheck) {
+    const rc = calibration.referenceCheck;
+    console.log(
+      `calibrate: reference ${rc.referenceModel} agrees with author gold on ${rc.goldAgreement.agree}/${rc.goldAgreement.total} (${(rc.goldAgreement.rate * 100).toFixed(1)}%); held-out acc vs reference ${(rc.heldoutVsReference.accuracyAtCoverage * 100).toFixed(1)}% at ${(rc.heldoutVsReference.coverage * 100).toFixed(1)}% coverage; verdicts identical on ${rc.thresholdsAgreeOnVerdicts.same}/${rc.thresholdsAgreeOnVerdicts.total}`
+    );
+  }
 }
 
 main().catch((e) => {

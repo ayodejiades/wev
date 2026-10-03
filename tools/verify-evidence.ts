@@ -25,6 +25,8 @@ import {
   BENCHMARK_CASES,
   type InspectorInput,
 } from "../lib/kernel.js";
+import { computeReferenceCheck, type ReferenceRun } from "../lib/calibrate.js";
+import { summarizeReference } from "../lib/reference.js";
 
 const reportPath = path.join(process.cwd(), "evidence", "campaign-report.json");
 if (!fs.existsSync(reportPath)) {
@@ -238,6 +240,104 @@ const capturedSha256 = crypto.createHash("sha256").update(fs.readFileSync(captur
 const thresholdsSha256 = crypto.createHash("sha256").update(fs.readFileSync(thresholdsPath, "utf8")).digest("hex");
 const calibrationSha256 = crypto.createHash("sha256").update(fs.readFileSync(calibrationPath, "utf8")).digest("hex");
 
+// ---------------------------------------------------------------------------
+// OPTIONAL second label source: evidence/reference-labels.json (pnpm reference).
+// Absent => the row says so and everything still passes; present => re-hash it,
+// recompute the agreement and the whole referenceCheck block from the captured
+// runs, and fail on any mismatch. It is never invented and never required.
+// ---------------------------------------------------------------------------
+const referencePath = path.join(process.cwd(), "evidence", "reference-labels.json");
+const itemsPath = path.join(process.cwd(), "data", "items.json");
+let referenceSha256: string | null = null;
+let referenceModel: string | null = null;
+let referenceRow = "| REFERENCE: independent label source | NOT RECORDED | REFERENCE: not recorded — the reference model is optional and no reference-labels.json is committed |";
+
+if (fs.existsSync(referencePath)) {
+  const referenceRaw = fs.readFileSync(referencePath, "utf8");
+  referenceSha256 = crypto.createHash("sha256").update(referenceRaw).digest("hex");
+  const referenceDoc = JSON.parse(referenceRaw) as {
+    model: string;
+    itemsSha256: string;
+    agreementWithGold: { agree: number; total: number; rate: number };
+    labels: Array<{ id: string; label: string; gold: string; agrees: boolean }>;
+  };
+  referenceModel = referenceDoc.model;
+  if (!fs.existsSync(itemsPath)) {
+    console.error("verify:evidence FAILED: data/items.json missing: cannot check reference-labels.json freshness");
+    process.exit(1);
+  }
+  const itemsSha256 = crypto.createHash("sha256").update(fs.readFileSync(itemsPath)).digest("hex");
+  if (referenceDoc.itemsSha256 !== itemsSha256) {
+    console.error("verify:evidence FAILED: reference-labels.json is stale (data/items.json changed since it was recorded)");
+    process.exit(1);
+  }
+  const recomputedAgreement = summarizeReference(
+    referenceDoc.labels,
+    capturedRuns.map((r) => ({ id: r.id, gold: r.gold }))
+  );
+  for (const key of ["agree", "total", "rate"] as const) {
+    if (recomputedAgreement[key] !== referenceDoc.agreementWithGold[key]) {
+      console.error(
+        `verify:evidence FAILED: reference agreementWithGold.${key} recomputed=${recomputedAgreement[key]} committed=${referenceDoc.agreementWithGold[key]}`
+      );
+      process.exit(1);
+    }
+  }
+  const referenceById = new Map(referenceDoc.labels.map((l) => [l.id, l.label]));
+  const withReference: ReferenceRun[] = capturedRuns.map((r) => {
+    const referenceLabel = referenceById.get(r.id);
+    if (referenceLabel === undefined) {
+      console.error(`verify:evidence FAILED: reference-labels.json has no label for captured run ${r.id}`);
+      process.exit(1);
+    }
+    return {
+      id: r.id,
+      confidence: r.confidence,
+      entropyBits: r.entropyBits,
+      correct: r.correct,
+      prediction: r.prediction,
+      gold: r.gold,
+      referenceLabel,
+    };
+  });
+  const recomputedCheck = computeReferenceCheck({
+    heldout: withReference.filter((r) => calibrationDoc.split.heldoutIds.includes(r.id)),
+    allRuns: withReference,
+    thresholds: {
+      autoConfidence: thresholdsDoc.autoConfidence,
+      maxEntropyBits: thresholdsDoc.maxEntropyBits,
+    },
+    referenceModel: referenceDoc.model,
+    referenceSha256,
+  });
+  const committedCheck = (calibrationDoc as { referenceCheck?: Record<string, unknown> }).referenceCheck;
+  if (!committedCheck) {
+    console.error("verify:evidence FAILED: reference-labels.json exists but calibration.json has no referenceCheck; run pnpm calibrate");
+    process.exit(1);
+  }
+  for (const key of ["referenceModel", "referenceSha256"] as const) {
+    if (recomputedCheck[key] !== committedCheck[key]) {
+      console.error(
+        `verify:evidence FAILED: referenceCheck.${key} recomputed=${String(recomputedCheck[key])} committed=${String(committedCheck[key])}`
+      );
+      process.exit(1);
+    }
+  }
+  for (const block of ["goldAgreement", "heldoutVsGold", "heldoutVsReference", "thresholdsAgreeOnVerdicts"] as const) {
+    const recomputedBlock = recomputedCheck[block] as Record<string, number>;
+    const committedBlock = committedCheck[block] as Record<string, number>;
+    for (const key of Object.keys(recomputedBlock)) {
+      if (recomputedBlock[key] !== committedBlock[key]) {
+        console.error(
+          `verify:evidence FAILED: referenceCheck.${block}.${key} recomputed=${recomputedBlock[key]} committed=${committedBlock[key]}`
+        );
+        process.exit(1);
+      }
+    }
+  }
+  referenceRow = `| REFERENCE: independent label source | PASS | ${referenceDoc.model} agrees with the author's synthetic labels on ${recomputedCheck.goldAgreement.agree}/${recomputedCheck.goldAgreement.total} (${round1pct(recomputedCheck.goldAgreement.rate)}); held-out ${recomputedCheck.heldoutVsReference.autoHandled}/${recomputedCheck.heldoutVsReference.total} auto at ${round1pct(recomputedCheck.heldoutVsReference.accuracyAtCoverage)} vs reference vs ${round1pct(recomputedCheck.heldoutVsGold.accuracyAtCoverage)} vs gold; verdicts identical on ${recomputedCheck.thresholdsAgreeOnVerdicts.same}/${recomputedCheck.thresholdsAgreeOnVerdicts.total} |`;
+}
+
 const verificationMd = [
   "# Independent Verification & Claim Ledger",
   "",
@@ -260,6 +360,7 @@ const verificationMd = [
   `| INV-4: Flat-Distribution Abstention | PASS | ${campaign.summary.abstentions} flat/corrupt outputs refused |`,
   `| INV-5: Determinism | PASS | identical input yields identical state and digest |`,
   `| GATE: Calibrated AUTO/ESCALATE | PASS | ${capturedRuns.length}/${capturedRuns.length} captured runs reproduce calibration.json (held-out ${heldGate.autoHandled} auto, ${heldGate.wrongAutoActions} wrong) |`,
+  referenceRow,
   "",
 ].join("\n");
 
@@ -288,6 +389,29 @@ fs.mkdirSync(path.join(process.cwd(), "docs"), { recursive: true });
 fs.writeFileSync(path.join(process.cwd(), "evidence", "verification.md"), verificationMd);
 fs.writeFileSync(path.join(process.cwd(), "evidence", "campaign-report.md"), campaignMd);
 fs.writeFileSync(path.join(process.cwd(), "CLAIM_LEDGER.md"), verificationMd);
+
+// Evidence manifest: the sha256 of every evidence file this run read, plus the
+// reference file when present. lib/receipt.ts imports it so a receipt can name
+// the calibration evidence it was issued against. Deliberately timestamp-free
+// and key-ordered: running claim:verify twice must produce identical bytes.
+const manifestFiles: Record<string, string> = {
+  "campaign-report.json": reportSha256,
+  "captured-runs.json": capturedSha256,
+  "thresholds.json": thresholdsSha256,
+  "calibration.json": calibrationSha256,
+};
+if (referenceSha256) manifestFiles["reference-labels.json"] = referenceSha256;
+const manifest = {
+  kind: "wev-evidence-manifest",
+  version: 1,
+  files: manifestFiles,
+  goldSource: "author-synthetic",
+  referenceModel,
+};
+fs.writeFileSync(
+  path.join(process.cwd(), "evidence", "evidence-manifest.json"),
+  JSON.stringify(manifest, null, 2) + "\n"
+);
 fs.writeFileSync(
   path.join(process.cwd(), "WHAT_IS_REAL.md"),
   [

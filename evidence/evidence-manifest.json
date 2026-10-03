@@ -1,0 +1,12 @@
+{
+  "kind": "wev-evidence-manifest",
+  "version": 1,
+  "files": {
+    "campaign-report.json": "8a63030107ef7693619ccfb327afde7ddce335ba91c1eb5e978b1a69f1b11ab8",
+    "captured-runs.json": "b3bca22a0db57dc715326f7d1d8fc7658d694be5e59b449adb83754a3769187e",
+    "thresholds.json": "0e0ad40446f511c34a70eaaa1ac557614bfe5ef514e61beab3f6dc0e3159bd3c",
+    "calibration.json": "26b2e772334011859d35dd6c790fc46828b4ad513cdbab0ea1952de171640d73"
+  },
+  "goldSource": "author-synthetic",
+  "referenceModel": null
+}

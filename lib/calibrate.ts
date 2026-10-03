@@ -125,3 +125,71 @@ export function gateReport(items: ScoredItem[], thresholds: PickedThresholds): S
     baselineWrong: items.filter((r) => !r.correct).length,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Second label source (OPTIONAL): score the same held-out split against an
+// independent labeller instead of only against the author's gold labels.
+// Shared by tools/calibrate.ts (writes it) and tools/verify-evidence.ts
+// (recomputes it and fails on any mismatch).
+// ---------------------------------------------------------------------------
+
+/** A captured run that also carries a reference-model label for the same id. */
+export interface ReferenceRun extends ScoredItem {
+  prediction: string;
+  gold: string;
+  referenceLabel: string;
+}
+
+export interface Agreement {
+  agree: number;
+  total: number;
+  rate: number;
+}
+
+export interface ReferenceCheck {
+  referenceModel: string;
+  referenceSha256: string;
+  goldAgreement: Agreement;
+  heldoutVsGold: SplitReport;
+  heldoutVsReference: SplitReport;
+  thresholdsAgreeOnVerdicts: { same: number; total: number };
+}
+
+/**
+ * Re-score one split against both labellers. The gate verdict itself depends
+ * only on confidence and entropy, so the two verdict sets are expected to be
+ * identical; that is computed here rather than assumed.
+ */
+export function computeReferenceCheck(input: {
+  heldout: ReferenceRun[];
+  allRuns: ReferenceRun[];
+  thresholds: PickedThresholds;
+  referenceModel: string;
+  referenceSha256: string;
+}): ReferenceCheck {
+  const { heldout, allRuns, thresholds } = input;
+  const vsReference = (rows: ReferenceRun[]) =>
+    rows.map((r) => ({ ...r, correct: r.prediction === r.referenceLabel }));
+  const autoVerdict = (r: ScoredItem) =>
+    r.confidence >= thresholds.autoConfidence && r.entropyBits <= thresholds.maxEntropyBits;
+  let same = 0;
+  for (let i = 0; i < heldout.length; i++) {
+    if (autoVerdict(heldout[i]) === autoVerdict(vsReference(heldout)[i])) same++;
+  }
+  return {
+    referenceModel: input.referenceModel,
+    referenceSha256: input.referenceSha256,
+    goldAgreement: (() => {
+      // How often the reference model's label equals the author's label. This
+      // is agreement between two labellers, NOT accuracy against truth (the
+      // author's labels are synthetic) — and it is the same number the
+      // evidence file stores as agreementWithGold.
+      const agree = allRuns.filter((r) => r.referenceLabel === r.gold).length;
+      const total = allRuns.length;
+      return { agree, total, rate: total === 0 ? 0 : round4(agree / total) };
+    })(),
+    heldoutVsGold: gateReport(heldout, thresholds),
+    heldoutVsReference: gateReport(vsReference(heldout), thresholds),
+    thresholdsAgreeOnVerdicts: { same, total: heldout.length },
+  };
+}
