@@ -51,7 +51,10 @@ pnpm calibrate
 pnpm claim:verify
 
 # 3. Build into a separate dir so the committed .next stays untouched.
-NEXT_DIST_DIR=.next-e2e pnpm build
+#    BUILD_CMD exists because `next build` (Turbopack) intermittently livelocks
+#    in the postcss worker on a heavily loaded machine; `next build --webpack`
+#    produces the same app. Default stays the documented command.
+NEXT_DIST_DIR=.next-e2e ${BUILD_CMD:-pnpm build}
 
 # 4. Only the reference-tagged tests run in this build.
 E2E_REFERENCE_FIXTURE=1 E2E_DIST_DIR=.next-e2e E2E_PORT="${E2E_PORT:-3113}" pnpm test:e2e

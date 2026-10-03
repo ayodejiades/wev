@@ -98,8 +98,13 @@ async function blockNonLocal(context) {
 
 /** Spawn the built app and wait until it answers. */
 async function startServer() {
-  server = spawn("pnpm", ["start", "-p", String(PORT)], {
+  // detached so the whole process group can be killed: `pnpm start` spawns
+  // `next start` as a child, and killing only the wrapper orphans the server,
+  // which keeps this process's stdio pipes open and hangs the test runner at
+  // exit with no output.
+  server = spawn("pnpm", ["exec", "next", "start", "-p", String(PORT)], {
     cwd: ROOT,
+    detached: true,
     env: {
       ...process.env,
       DEMO_MODE: "1",
@@ -129,16 +134,49 @@ before(async () => {
   offlineContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
 });
 
-after(async () => {
-  await offlineContext?.close();
-  await context?.close();
-  await browser?.close();
-  if (server && !server.killed && !serverExit) {
-    server.kill("SIGTERM");
-    await new Promise((r) => setTimeout(r, 500));
-    if (!server.killed) server.kill("SIGKILL");
+/** Teardown must never be what fails a green run. */
+async function withTimeout(promise, ms, label) {
+  let timer;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`${label} did not finish in ${ms}ms`)), ms);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+after(async () => {
+  for (const [label, close] of [
+    ["offlineContext.close", () => offlineContext?.close()],
+    ["context.close", () => context?.close()],
+    ["browser.close", () => browser?.close()],
+  ]) {
+    try {
+      await withTimeout(close(), 20000, label);
+    } catch (e) {
+      process.stderr.write(`[e2e] teardown: ${e.message} (ignored)\n`);
+    }
+  }
+  killServerGroup();
 });
+
+/** Kill the server AND its children; leave nothing listening (A7.2). */
+function killServerGroup() {
+  if (!server || server.killed || serverExit) return;
+  try {
+    process.kill(-server.pid, "SIGKILL");
+  } catch {
+    try {
+      server.kill("SIGKILL");
+    } catch {
+      /* already gone */
+    }
+  }
+}
 
 /** Fail with the server's own exit reason rather than a bare connection error. */
 function assertServerAlive() {

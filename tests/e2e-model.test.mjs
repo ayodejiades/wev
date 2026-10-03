@@ -146,8 +146,11 @@ function parseRow(text) {
 
 /** Spawn the built app with DEMO_MODE off (the real model path) and wait for it. */
 async function startServer() {
-  server = spawn("pnpm", ["start", "-p", String(PORT)], {
+  // detached: the whole group is killed in teardown, so no orphaned server
+  // keeps this process's pipes open (see tests/e2e.test.mjs).
+  server = spawn("pnpm", ["exec", "next", "start", "-p", String(PORT)], {
     cwd: ROOT,
+    detached: true,
     env: { ...process.env, DEMO_MODE: "", NEXT_TELEMETRY_DISABLED: "1" },
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -171,9 +174,11 @@ before(async () => {
 after(async () => {
   await context?.close();
   if (server && !server.killed && !serverExit) {
-    server.kill("SIGTERM");
-    await new Promise((r) => setTimeout(r, 500));
-    if (!server.killed) server.kill("SIGKILL");
+    try {
+      process.kill(-server.pid, "SIGKILL");
+    } catch {
+      server.kill("SIGKILL");
+    }
   }
   if (userProfile) fs.rmSync(userProfile, { recursive: true, force: true });
 });
