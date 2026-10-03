@@ -189,7 +189,9 @@ export function explainLoadError(error: unknown): string {
   if (/timed out|timeout|aborted|abort/i.test(message)) {
     return `Load timed out or was stopped. Check the connection and retry. (${message})`;
   }
-  if (/404|not found|no such|revision/i.test(message)) {
+  // transformers.js v3 says "Could not locate file" for a 404/ENOENT; without
+  // this the user got a raw module message instead of the plain explanation.
+  if (/404|not found|no such|revision|could not locate/i.test(message)) {
     return `Model id not found on the Hub, or it has no ONNX weights this app can load. (${message})`;
   }
   if (/failed to fetch|fetch failed|network|CORS|cross-origin|load failed/i.test(message)) {

@@ -1,0 +1,78 @@
+{
+  "matched": 9,
+  "total": 10,
+  "maxConfidenceDelta": 0.3366,
+  "generatedAt": "2026-10-03T17:49:14.905Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+  "note": "Browser (WASM) vs Node parity on the first 10 items: predictions must match on >= 9/10 and, where they agree, the displayed confidence must be within 0.02. Recorded whether it passed or failed; never loosened to pass.",
+  "rows": [
+    {
+      "id": "T-001",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-002",
+      "browser": "review",
+      "node": "refund",
+      "same": false
+    },
+    {
+      "id": "T-003",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-004",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-005",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-006",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-007",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-008",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-009",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    },
+    {
+      "id": "T-010",
+      "browser": "refund",
+      "node": "refund",
+      "same": true
+    }
+  ],
+  "loadSeconds": 358,
+  "statusLinesSeen": [],
+  "weightFetch": {
+    "hubRequests": 33,
+    "cdnResponses": 4,
+    "runtimeResponses": 5,
+    "note": "The Hub answers 302 for onnx/model_uint8.onnx and streams the bytes from an opaque path on its LFS CDN, so the weight fetch is identified by host, not by filename."
+  }
+}

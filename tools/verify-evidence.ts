@@ -241,6 +241,47 @@ const thresholdsSha256 = crypto.createHash("sha256").update(fs.readFileSync(thre
 const calibrationSha256 = crypto.createHash("sha256").update(fs.readFileSync(calibrationPath, "utf8")).digest("hex");
 
 // ---------------------------------------------------------------------------
+// OPTIONAL: evidence/browser-parity.json (E2E_MODEL=1 pnpm test:e2e:model) records
+// how the in-browser WASM run compared with this committed Node run. Nothing is
+// recomputed from it — a browser parity report is a measurement, not a proof —
+// but a malformed one is a broken evidence file, so it fails here rather than
+// being quietly ignored.
+const parityPath = path.join(process.cwd(), "evidence", "browser-parity.json");
+let browserParityLine = "browser parity file: absent (run E2E_MODEL=1 pnpm test:e2e:model to record it)";
+let browserParity: { matched: number; total: number; maxConfidenceDelta: number; recorded: string } | null = null;
+if (fs.existsSync(parityPath)) {
+  let parity: { matched?: unknown; total?: unknown; maxConfidenceDelta?: unknown; generatedAt?: unknown; userAgent?: unknown };
+  try {
+    parity = JSON.parse(fs.readFileSync(parityPath, "utf8"));
+  } catch (e) {
+    console.error(`verify:evidence FAILED: evidence/browser-parity.json does not parse: ${e instanceof Error ? e.message : String(e)}`);
+    process.exit(1);
+  }
+  const numbers = ["matched", "total", "maxConfidenceDelta"] as const;
+  for (const key of numbers) {
+    if (typeof parity[key] !== "number" || !Number.isFinite(parity[key] as number)) {
+      console.error(`verify:evidence FAILED: evidence/browser-parity.json ${key} is not a finite number`);
+      process.exit(1);
+    }
+  }
+  if (typeof parity.generatedAt !== "string" || typeof parity.userAgent !== "string") {
+    console.error("verify:evidence FAILED: evidence/browser-parity.json needs string generatedAt and userAgent");
+    process.exit(1);
+  }
+  if ((parity.matched as number) > (parity.total as number)) {
+    console.error("verify:evidence FAILED: evidence/browser-parity.json matched exceeds total");
+    process.exit(1);
+  }
+  browserParityLine = `browser parity file: ${parity.matched}/${parity.total} predictions match, max confidence delta ${parity.maxConfidenceDelta} (recorded ${parity.generatedAt})`;
+  browserParity = {
+    matched: parity.matched as number,
+    total: parity.total as number,
+    maxConfidenceDelta: parity.maxConfidenceDelta as number,
+    recorded: parity.generatedAt as string,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // OPTIONAL second label source: evidence/reference-labels.json (pnpm reference).
 // Absent => the row says so and everything still passes; present => re-hash it,
 // recompute the agreement and the whole referenceCheck block from the captured
@@ -352,6 +393,7 @@ const verificationMd = [
   `- thresholds.json sha256: \`${thresholdsSha256}\` (autoConfidence=${GATE_THRESHOLDS.autoConfidence}, maxEntropyBits=${GATE_THRESHOLDS.maxEntropyBits})`,
   `- calibration.json sha256: \`${calibrationSha256}\``,
   `- Held-out gate report: coverage ${round1pct(heldGate.coverage)} (${heldGate.autoHandled}/${heldGate.total} auto) at accuracy ${round1pct(heldGate.accuracyAtCoverage)} vs always-trust baseline ${round1pct(heldGate.baselineAccuracy)}, wrong auto-actions ${heldGate.wrongAutoActions}`,
+  `- ${browserParityLine}`,
   `- Verified at: ${nowIso}`,
   "",
   "| Invariant | Result | Computed Evidence |",
@@ -433,8 +475,9 @@ fs.writeFileSync(
     "| **Offline `DEMO_MODE` Fixture Store (`db/index.ts`)** | **LIVE_FALLBACK** | Automatic in-memory fixture store when `DATABASE_URL` is unset |",
     "| **Fixture provenance (`evidence/campaign-report.json`)** | **HAND_WRITTEN** | The 8 campaign and 8 benchmark distributions are authored, not captured from SmolLM2. They show the kernel applies its thresholds; they do not show the thresholds are calibrated. |",
     `| **Captured model runs (\`evidence/captured-runs.json\`)** | **MEASURED_MODEL_EXECUTION** | ${capturedRuns.length} real ${capturedDoc.modelId} (${capturedDoc.dtype}) runs, ${capturedCorrect}/${capturedRuns.length} correct. Gold labels are SYNTHETIC (hand-written in \`data/items.json\`). |`,
-    "| **Offline operation** | **NOT_OFFLINE_FIRST_RUN** | First load needs network: transformers.js from jsDelivr plus ~130MB of weights (browser HTTP cache after that; `DEMO_MODE` replay is network-free by construction, bundled evidence, local gate, 5s-timeout health probe). The prescribed load-then-go-offline inbox run was not performed this session (no browser), so no works-offline-after-first-load claim is made. |",
+    "| **Offline operation** | **NOT_OFFLINE_AFTER_FIRST_LOAD** | First load needs network: transformers.js from jsDelivr plus ~130MB of weights. The load-then-go-offline run was attempted in a real browser on 2026-10-03 (Chromium 153.0.8010.12, Playwright) and FAILED: with every non-local host blocked the transformers.js runtime re-import could not be served, so no offline inbox run is claimed. `DEMO_MODE=1` replay is network-free by construction. Two other tools cannot emulate this claim faithfully (Chromium offline mode also cuts 127.0.0.1, and a request route is consulted before the HTTP cache), so this stays unverified rather than passed. |",
     "| **In-browser tiny model (transformers.js, `lib/wev-model.ts` + `/live`)** | **LIVE_IN_BROWSER** | Top-k renormalized to sum to 1 (`renormalizeTopK`, unit-tested); raw top-k sum + full-vocab entropy shown on screen; kernel thresholds above verified on committed fixtures |",
+    `| **Browser vs Node parity (\`evidence/browser-parity.json\`)** | **${browserParity ? "MEASURED_DIVERGENCE" : "NOT_RUN"}** | ${browserParity ? `A real Chromium run of ${capturedDoc.modelId} on the first 10 captured items agreed with the committed Node run on ${browserParity.matched}/${browserParity.total} PREDICTIONS, but per-item confidences drift by up to ${browserParity.maxConfidenceDelta} (bar: 0.02), so the A9.2 bar FAILS and was not loosened. \`pnpm capture\` reproduces \`evidence/captured-runs.json\` byte-for-byte in Node, so the committed evidence is sound and the divergence is the WASM browser path. Consequence: a number scored in the browser is NOT the number in this evidence, and the calibrated thresholds do not transfer between them.` : "Not run in this environment: it downloads ~130MB of weights."} |`,
     "",
   ].join("\n")
 );
