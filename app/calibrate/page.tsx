@@ -40,6 +40,7 @@ import {
 } from "@/lib/calibrate";
 import { buildGateCard, buildGateCopyText, selectGateTestCases } from "@/lib/gate-export";
 import { evidenceFromManifest } from "@/lib/receipt";
+import { referenceModelRecorded } from "@/lib/evidence-manifest";
 import { copyText } from "@/lib/clipboard";
 import itemsData from "../../data/items.json";
 
@@ -77,6 +78,9 @@ function safeEvidence() {
     return null;
   }
 }
+
+/** The recorded reference model (null unless `pnpm reference` has been run). */
+const RECORDED_REFERENCE_MODEL = referenceModelRecorded();
 
 function detectFormat(raw: string): "json" | "csv" {
   return raw.trimStart().startsWith("[") ? "json" : "csv";
@@ -397,6 +401,10 @@ export default function CalibratePage() {
             <p className="mt-1 max-w-2xl text-xs text-[#525252]">
               Paste or drop ~30 labelled tickets (CSV or JSON: text,label). The on-device model scores them
               with the same closed-label scoring as capture; the same seeded split derives your thresholds.
+            </p>
+            <p className="mt-1 max-w-2xl text-xs text-[#525252]">
+              Reference model: optional audit, off by default.
+              {RECORDED_REFERENCE_MODEL ? ` Recorded here: ${RECORDED_REFERENCE_MODEL}.` : ""}
             </p>
           </div>
         </div>

@@ -29,6 +29,7 @@ import {
 } from "@/lib/wev-model";
 import { folderNameFor } from "@/lib/local-folder";
 import { selectInboxIds, summarizeInbox } from "@/lib/inbox";
+import { referenceModelRecorded } from "@/lib/evidence-manifest";
 import { createReceipt, evidenceFromManifest } from "@/lib/receipt";
 import { buildGateCard, buildGateCopyText, selectGateTestCases } from "@/lib/gate-export";
 import calibrationData from "../../evidence/calibration.json";
@@ -89,6 +90,9 @@ const runsById = new Map(
     [string, { id: string } & CapturedRow]
   >)
 );
+
+/** The recorded reference model (null unless `pnpm reference` has been run). */
+const RECORDED_REFERENCE_MODEL = referenceModelRecorded();
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -523,6 +527,10 @@ export default function InboxPage() {
             <p className="mt-1 max-w-2xl text-xs text-[#525252]">
               {INBOX_IDS.length} of {HELD_TOTAL} held-out synthetic tickets through {activeShort} ({activeModelId}),
               one by one. Gold labels are synthetic (data/items.json).
+            </p>
+            <p className="mt-1 max-w-2xl text-xs text-[#525252]">
+              Reference model: optional audit, off by default.
+              {RECORDED_REFERENCE_MODEL ? ` Recorded here: ${RECORDED_REFERENCE_MODEL}.` : ""}
             </p>
           </div>
           <div className="flex w-full sm:w-auto gap-2">

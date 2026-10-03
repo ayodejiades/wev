@@ -1,6 +1,6 @@
 {
   "project": "WEV",
-  "idea": "WEV Jevifies any local model, for free: see inside it, give it a typed decision mode, calibrate it, and gate it. (1) Inspect: a glass-box view of the model's next-token probabilities and entropy. (2) Jevify: you define a typed decision (choice, score or yes/no over a closed label set) and decide() answers it in one pass with per-label probabilities and a confidence, while generate() keeps the model's normal abilities. (3) Calibrate: WEV measures on real examples whether that confidence can be trusted. (4) Gate: confident decisions are acted on, uncertain ones fall back to the model's own generate() or a human. (5) Export: the wrapper, gate card and tests copy into your app as code, and every decision has a hashed receipt that /verify re-checks. Works with in-browser models, a local model server, or pre-scored output files; no server, no API key.",
+  "idea": "WEV Jevifies any local model, for free: see inside it, give it a typed decision mode, calibrate it, and gate it. (1) Inspect: a glass-box view of the model's next-token probabilities and entropy. (2) Jevify: you define a typed decision (choice, score or yes/no over a closed label set) and decide() answers it in one pass with per-label probabilities and a confidence, while generate() keeps the model's normal abilities. (3) Calibrate: WEV measures on real examples whether that confidence can be trusted. (4) Gate: confident decisions are acted on, uncertain ones fall back to the model's own generate() or a human. (5) Export: the wrapper, gate card and tests copy into your app as code, and every decision has a hashed receipt that /verify re-checks. Works with in-browser ONNX causal LMs via transformers.js, a local OpenAI-compatible server that returns token log-probs (experimental), or pre-scored output files from any model; no server and no API key needed. An optional reference model can audit the labels; the gate never depends on it.",
   "track": "web2",
   "team": 1,
   "event": {
@@ -39,14 +39,14 @@
     "sector": "WEB2 · Reliability tooling for on-device LLM features",
     "target_user": "A developer adding a small on-device LLM feature (autocomplete, form-fill, classification) who must decide, per output, whether to act on it or fall back to a default or a human",
     "painful_moment": "The model always returns an answer, even when its top two candidates were nearly tied or its distribution was flat. The developer has no per-output signal for 'safe to act on', so either everything is trusted or everything is double-checked.",
-    "unusual_constraint": "Any local model becomes a typed System 1 decider with a measured confidence, entirely on the user's machine: no server, no API key, and no second model grading the first.",
+    "unusual_constraint": "Any local model in the supported set (ONNX causal LMs in the browser, a local log-prob server, or pre-scored files) becomes a typed System 1 decider with a measured confidence, entirely on the user's machine: no server, no API key needed, and no second model grading the first at runtime. The only hosted model in the repo is an optional reference labeller used by pnpm reference, and the gate never reads its labels.",
     "proof_metric": "TARGET (unmeasured until `pnpm capture && pnpm calibrate` run): on a held-out half of ~100 synthetic labelled items, auto-handling only CONFIDENT verdicts gives higher accuracy than always taking the model's answer, reported as accuracy at coverage. Publish whatever the numbers are.",
     "essential_sponsor": "none",
     "essential_sponsor_role": "No sponsor is integrated. Inference stays local so the demo needs no key.",
     "adversarial_critique": {
       "why_generic_risk": "Token-probability viewers are common. WEV's difference is the decision on top: act, flag, or refuse, with a measured accuracy-at-coverage number instead of a picture.",
       "obvious_competitor": "Purpose-trained System 1 models such as Jev (TypeSafe AI) that return typed values and confidence out of the box, and generic transformers.js / LM visualizers. WEV is not a model: it adapts the models people already run, then measures whether their confidence can be trusted.",
-      "unprovable_claim_risk": "A general LLM wrapped as a decider is an approximation, not equal to a model trained for typed decisions, and its confidence may be poorly calibrated. Labelled items are synthetic and builder-written. State item count, split, model and task wherever a number appears. Do not claim Jev compatibility or equivalence unless tested against real Jev output.",
+      "unprovable_claim_risk": "A general LLM wrapped as a decider is an approximation, not equal to a model trained for typed decisions, and its confidence may be poorly calibrated. Labelled items are synthetic and builder-written. State item count, split, model and task wherever a number appears. Do not claim Jev compatibility or equivalence unless tested against real Jev output. The reference model is a second labeller, so agreement with it is not accuracy against truth.",
       "superficial_sponsor_risk": "No sponsor claimed.",
       "hour_8_kill_criterion": "If the gate does not beat 'always take the model's answer' on the held-out half, show that on /proof as an honest negative result and lead the demo with the failure gallery."
     },
@@ -206,7 +206,7 @@
     },
     "trust": [
       "Runs on your device",
-      "No account, no API key",
+      "No account, no API key needed",
       "Every decision has a re-checkable receipt",
       "Numbers re-derived by one command"
     ],

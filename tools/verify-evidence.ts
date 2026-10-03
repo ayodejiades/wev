@@ -250,6 +250,7 @@ const referencePath = path.join(process.cwd(), "evidence", "reference-labels.jso
 const itemsPath = path.join(process.cwd(), "data", "items.json");
 let referenceSha256: string | null = null;
 let referenceModel: string | null = null;
+let referenceLabelCount = 0;
 let referenceRow = "| REFERENCE: independent label source | NOT RECORDED | REFERENCE: not recorded — the reference model is optional and no reference-labels.json is committed |";
 
 if (fs.existsSync(referencePath)) {
@@ -262,6 +263,7 @@ if (fs.existsSync(referencePath)) {
     labels: Array<{ id: string; label: string; gold: string; agrees: boolean }>;
   };
   referenceModel = referenceDoc.model;
+  referenceLabelCount = referenceDoc.labels.length;
   if (!fs.existsSync(itemsPath)) {
     console.error("verify:evidence FAILED: data/items.json missing: cannot check reference-labels.json freshness");
     process.exit(1);
@@ -423,6 +425,9 @@ fs.writeFileSync(
     `| **Calibrated act-or-escalate gate (\`evaluateTriageGate\`)** | **PROVEN_LOCAL_EXECUTION** | Thresholds autoConfidence=${GATE_THRESHOLDS.autoConfidence}, maxEntropyBits=${GATE_THRESHOLDS.maxEntropyBits} from \`evidence/thresholds.json\`; ${capturedRuns.length}/${capturedRuns.length} captured runs reproduce \`evidence/calibration.json\` (held-out ${heldGate.autoHandled}/${heldGate.total} auto at ${round1pct(heldGate.accuracyAtCoverage)} vs baseline ${round1pct(heldGate.baselineAccuracy)}, ${heldGate.wrongAutoActions} wrong auto) |`,
     `| **Distribution validity gate (\`INV-1\`)** | **PROVEN_LOCAL_EXECUTION** | Malformed model output fails closed to \`ABSTAIN_INVALID_DISTRIBUTION\` / \`ESCALATE\` |`,
     `| **Exportable gate, gate card, receipts (\`lib/gate-export.ts\`, \`lib/receipt.ts\`)** | **PROVEN_LOCAL_EXECUTION** | Pasted gate agrees with the kernel on the evidence test cases; receipts round-trip hash + verdict checks (\`pnpm test\`) |`,
+    `| **Receipts v2 name their calibration evidence (\`lib/receipt.ts\`)** | **PROVEN_LOCAL_EXECUTION** | The hashed evidence block pins evidence/thresholds.json (${thresholdsSha256.slice(0, 12)}…), evidence/captured-runs.json and, when recorded, reference-labels.json. A re-hashed receipt naming other evidence verifies as VERIFIED_OTHER_THRESHOLDS, never VERIFIED; v1 receipts still verify (\`pnpm test\`) |`,
+    `| **Model adapters behind the picker (\`lib/decider.ts\`, \`lib/wev-model.ts\`, \`/inbox\`, \`/calibrate\`)** | **PROVEN_LOCAL_EXECUTION** for in-browser ONNX and pre-scored files; **LIMITED_TESTING** for the local server | In-browser ONNX and the pre-scored adapter are exercised in Node tests and in the Playwright run (\`tests/adapters.test.mjs\`, \`pnpm test:e2e\`). The local-server adapter is tested only against a stub that returns token log-probs and a stub that does not: no real llama.cpp server was run. Ollama is not supported — \`/api/generate\` returns no token log-probs. |`,
+    `| **Reference-model labeller (\`lib/reference.ts\`, \`tools/reference.ts\`, \`pnpm reference\`)** | **${referenceModel ? "BUILT" : "NOT_RUN_NO_KEY"}** | ${referenceModel ? `A reference run by ${referenceModel} is recorded in evidence/reference-labels.json (${referenceLabelCount} labels): this script re-hashes the file, recomputes the agreement with the author's synthetic gold labels and re-derives the whole referenceCheck block from the captured runs. Optional by construction: no page reads it, and the gate never reads a label.` : "Built and unit-tested against a stub endpoint (request shape, fail-closed parsing, api-key redaction, input order under concurrency, blocked run exits 2 writing nothing). No reference run is recorded, so no agreement number is claimed. When one is recorded, it is agreement between two labellers, not accuracy against truth."} |`,
     "| **Local model folder (Experimental)** | **LIMITED_TESTING** | Drop config.json + tokenizer files + single-file onnx weights; nothing uploads. Tested with SmolLM2-135M/360M (uint8) layouts: file mapping, tokenizer load and weight bytes verified off-device; the browser drop itself was not exercised this session. |",
     "| **Zero-signup `/live`, `/inbox`, `/proof`, & `/verify` surfaces** | **LIVE_IN_BROWSER** | Inspectable in browser with 1-byte tamper detection |",
     "| **Offline `DEMO_MODE` Fixture Store (`db/index.ts`)** | **LIVE_FALLBACK** | Automatic in-memory fixture store when `DATABASE_URL` is unset |",

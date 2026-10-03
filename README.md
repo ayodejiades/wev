@@ -1,6 +1,16 @@
 # WEV
 
-WEV Jevifies any local model, for free: see inside it, give it a typed decision mode, calibrate it, and gate it. A tiny model runs in your browser with transformers.js; plain code decides, per item, whether your app may act on the answer, fall back to normal generation, or must escalate to a human.
+WEV Jevifies any local model, for free: see inside it, give it a typed decision mode, calibrate it, and gate it. Plain code decides, per item, whether your app may act on the answer, fall back to normal generation, or must escalate to a human.
+
+**What "any local model" means here, exactly** — three built adapters, no others:
+
+| Adapter | What it supports | Status |
+|---|---|---|
+| **In-browser ONNX** | Any causal LM with ONNX weights the transformers.js runtime supports: a preset, a custom Hugging Face id, or a dropped local model folder. Runs in the tab via WASM. | Default; SmolLM2-135M backs all committed evidence |
+| **Local server** | A local OpenAI-compatible server that returns token log-probs (`/v1/completions`, llama.cpp server style). Your weights never leave your machine. | **EXPERIMENTAL**: tested only against a stub in this repo, never against a real server |
+| **Pre-scored file** | CSV/JSON of scores from *any* model (per-label probabilities, `predicted`+`confidence`, plus `entropyBits` so the gate can be applied). Needs no model and no download. | Built; route every non-AUTO item to ESCALATE because there is nothing to generate from |
+
+Not supported: Ollama's `/api/generate` (it returns no token log-probs), any hosted API as a runtime adapter (a hosted model can only audit labels, see below), and GGUF files without an OpenAI-compatible server in front of them.
 
 > **Engineered by Ayodeji Adesegun** ([@ayodejiades](https://github.com/ayodejiades)) · **Live:** [wev-one.vercel.app](https://wev-one.vercel.app)
 
@@ -60,13 +70,34 @@ pnpm install
 pnpm dev           # local dev server
 pnpm capture      # real SmolLM2 runs on data/items.json -> evidence/captured-runs.json
 pnpm calibrate     # seeded 50/50 split -> evidence/thresholds.json + evidence/calibration.json
+pnpm reference    # OPTIONAL: record a second, independent label source (needs REFERENCE_API_KEY + REFERENCE_MODEL)
 pnpm claim:verify  # re-derives all claims in CLAIM_LEDGER.md and WHAT_IS_REAL.md
 pnpm test          # runs the test suite
 pnpm build         # production build
 pnpm start         # serve the production build
 ```
 
-Reproducing the numbers needs no key and no server: capture downloads the public ONNX weights once (cached after), calibrate is pure computation on the captured runs. `DEMO_MODE=1` runs the app offline on committed fixtures and captured runs.
+No API key needed: capture downloads the public ONNX weights once (cached after), calibrate is pure computation on the captured runs. `DEMO_MODE=1` runs the app offline on committed fixtures and captured runs. An optional reference model can audit the labels; the gate never depends on it.
+
+## Evidence from a reference model
+
+The optional second label source. `pnpm reference` asks one hosted model (any OpenAI-compatible
+`/v1/chat/completions` endpoint) to label every item in `data/items.json` **independently** — it never sees
+the author's gold labels or few-shot examples — and writes `evidence/reference-labels.json` with the provider,
+model id, the exact system prompt, the sha256 of the item file it read, and the agreement rate. `pnpm calibrate`
+then re-scores the same seeded split against both labellers and stores the result in
+`evidence/calibration.json` under `referenceCheck`; `pnpm claim:verify` recomputes all of it and fails on any
+mismatch; `/proof` shows the numbers; and every receipt names the evidence it was issued against.
+
+What the agreement number means: **two labellers agreeing**, not accuracy against truth. The author's labels
+are synthetic, so "92% agreement" means the reference model mostly picked the same label as the author — it
+does not mean either was right.
+
+It is off by default and needs nothing else. With no `REFERENCE_API_KEY` set, the tool prints
+`reference BLOCKED: set REFERENCE_API_KEY and REFERENCE_MODEL` and exits 2 without writing a file; the build,
+`pnpm test`, `pnpm claim:verify` and the whole demo path all pass with `evidence/reference-labels.json`
+absent. The key is read from the environment only: never stored in the evidence file, never logged, never put
+in a URL. It is also never a runtime input — no page calls a hosted model.
 
 ## What is real
 

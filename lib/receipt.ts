@@ -19,7 +19,7 @@
  */
 
 import { GATE_THRESHOLDS, evaluateTriageGate } from "./kernel";
-import evidenceManifestDoc from "../evidence/evidence-manifest.json";
+import { EVIDENCE_MANIFEST } from "./evidence-manifest";
 
 export const RECEIPT_KIND = "wev-gate-receipt";
 export const RECEIPT_VERSION = 2;
@@ -44,13 +44,7 @@ export interface ReceiptEvidence {
   goldSource: "author-synthetic";
 }
 
-const MANIFEST = evidenceManifestDoc as {
-  kind: string;
-  version: number;
-  files: Record<string, string>;
-  goldSource: "author-synthetic";
-  referenceModel: string | null;
-};
+const MANIFEST = EVIDENCE_MANIFEST;
 
 /**
  * The evidence block for this build, read from evidence/evidence-manifest.json
@@ -68,7 +62,7 @@ export function evidenceFromManifest(): ReceiptEvidence {
     capturedRunsSha256,
     referenceSha256: MANIFEST.files?.["reference-labels.json"] ?? null,
     referenceModel: MANIFEST.referenceModel ?? null,
-    goldSource: MANIFEST.goldSource ?? "author-synthetic",
+    goldSource: (MANIFEST.goldSource ?? "author-synthetic") as "author-synthetic",
   };
 }
 

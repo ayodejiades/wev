@@ -12,6 +12,15 @@
 
 export const CALIBRATION_SEED = 42;
 
+/**
+ * One formatter for every rate on screen and in the browser tests: 0.6 -> "60.0%".
+ * The page and the test import this, so a test can assert the exact string a
+ * judge reads instead of a second copy of the rounding.
+ */
+export function formatPct(x: number): string {
+  return `${(x * 100).toFixed(1)}%`;
+}
+
 /** Fewer items leave <10 per half: thresholds picked on tiny halves overfit. */
 export const MIN_CALIBRATION_ITEMS = 20;
 

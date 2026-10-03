@@ -11,6 +11,8 @@ import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard-shell";
 import calibrationData from "../../evidence/calibration.json";
 import capturedData from "../../evidence/captured-runs.json";
+import { formatPct } from "@/lib/calibrate";
+import { referenceModelRecorded } from "@/lib/evidence-manifest";
 
 interface CapturedRun {
   id: string;
@@ -34,6 +36,19 @@ const calibration = calibrationData as {
     heldout: Record<string, number>;
   };
   syntheticDataNote: string;
+  /**
+   * Present only when `pnpm reference` recorded a reference-model run before
+   * this calibration was written (Fix: two label sources). Computed by
+   * tools/calibrate.ts from the captured runs — imported here, never retyped.
+   */
+  referenceCheck?: {
+    referenceModel: string;
+    referenceSha256: string;
+    goldAgreement: { agree: number; total: number; rate: number };
+    heldoutVsGold: Record<string, number>;
+    heldoutVsReference: Record<string, number>;
+    thresholdsAgreeOnVerdicts: { same: number; total: number };
+  };
 };
 const runs = (capturedData as { runs: CapturedRun[] }).runs;
 const byId = new Map(runs.map((r) => [r.id, r]));
@@ -65,7 +80,9 @@ const curve = sweepTaus
   })
   .filter((p): p is { tau: number; coverage: number; accuracy: number } => p !== null);
 
-const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
+const pct = formatPct;
+const REFERENCE_MODEL = referenceModelRecorded();
+const referenceCheck = calibration.referenceCheck;
 const correctAutoHeld = held.autoHandled - held.wrongAutoActions;
 const correctBaseHeld = held.total - held.baselineWrong;
 
@@ -180,6 +197,10 @@ export default function ProofCalibrationPage() {
               {runs.length} captured {calibration.modelId} runs, seeded {calibration.seed} split{" "}
               {calibration.split.calibrationSize}/{calibration.split.heldoutSize}; thresholds picked on the
               first half, reported on the second: confidence ≥ {TAU}, entropy ≤ {MAX_H} bits.
+            </p>
+            <p className="mt-1 max-w-2xl text-xs text-[#525252]">
+              Reference model: optional audit, off by default.
+              {REFERENCE_MODEL ? ` Recorded here: ${REFERENCE_MODEL}.` : ""}
             </p>
           </div>
         </div>
@@ -654,6 +675,88 @@ export default function ProofCalibrationPage() {
               ))
             )}
           </div>
+        </section>
+
+        {/* Second label source (OPTIONAL): the same split scored against an
+            independent labeller. Numbers come from evidence/calibration.json,
+            written by tools/calibrate.ts; nothing here is retyped. */}
+        <section
+          data-demo="proof-reference"
+          className="flex flex-col gap-3 border-2 border-[#0a0a0a] bg-[#ffffff] p-3.5 sm:p-5 shadow-[4px_4px_0_0_#0a0a0a]"
+        >
+          <div className="flex flex-wrap items-start justify-between gap-3 border-b-2 border-[#0a0a0a] pb-3">
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#525252]">
+                Scored against a second labeller
+              </span>
+              <h2 className="font-mono text-lg font-bold text-[#0a0a0a]">
+                {referenceCheck ? `Reference model: ${referenceCheck.referenceModel}` : "No reference model recorded."}
+              </h2>
+            </div>
+          </div>
+          {referenceCheck ? (
+            <>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-4">
+                <div className="border-2 border-[#0a0a0a] bg-[#ece8df] p-2.5 sm:p-3">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0a0a0a]">
+                    Agreement with author gold
+                  </div>
+                  <div className="mt-1 font-mono text-xl font-bold text-[#0a0a0a]">
+                    {pct(referenceCheck.goldAgreement.rate)}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[10px] text-[#525252]">
+                    {referenceCheck.goldAgreement.agree} of {referenceCheck.goldAgreement.total} items
+                  </div>
+                </div>
+                <div className="border-2 border-[#0a0a0a] bg-[#ece8df] p-2.5 sm:p-3">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#525252]">
+                    Held-out vs gold
+                  </div>
+                  <div className="mt-1 font-mono text-xl font-bold text-[#0a0a0a]">
+                    {pct(referenceCheck.heldoutVsGold.accuracyAtCoverage)}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[10px] text-[#525252]">
+                    {referenceCheck.heldoutVsGold.autoHandled} of {referenceCheck.heldoutVsGold.total} auto
+                  </div>
+                </div>
+                <div className="border-2 border-[#0a0a0a] bg-[#ece8df] p-2.5 sm:p-3">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#525252]">
+                    Held-out vs reference
+                  </div>
+                  <div className="mt-1 font-mono text-xl font-bold text-[#0a0a0a]">
+                    {pct(referenceCheck.heldoutVsReference.accuracyAtCoverage)}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[10px] text-[#525252]">
+                    {referenceCheck.heldoutVsReference.autoHandled} of{" "}
+                    {referenceCheck.heldoutVsReference.total} auto
+                  </div>
+                </div>
+                <div className="border-2 border-[#0a0a0a] bg-[#ece8df] p-2.5 sm:p-3">
+                  <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#525252]">
+                    Verdicts unchanged
+                  </div>
+                  <div className="mt-1 font-mono text-xl font-bold text-[#0a0a0a]">
+                    {referenceCheck.thresholdsAgreeOnVerdicts.same} /{" "}
+                    {referenceCheck.thresholdsAgreeOnVerdicts.total}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[10px] text-[#525252]">
+                    the gate never reads a label
+                  </div>
+                </div>
+              </div>
+              <p className="font-mono text-[11px] text-[#525252]">
+                Agreement between two labellers, not accuracy against truth. Synthetic data:{" "}
+                {calibration.syntheticDataNote} The gate itself only reads the model&apos;s confidence and
+                entropy, which is why the verdicts are identical on every held-out item.
+              </p>
+            </>
+          ) : (
+            <p className="font-mono text-[11px] text-[#525252]">
+              No reference model recorded. The numbers above are scored against the author&apos;s synthetic gold
+              labels only. Run <span className="font-bold text-[#0a0a0a]">pnpm reference</span> with a key set to
+              add a second, independent label source; nothing above changes and the app needs no key.
+            </p>
+          )}
         </section>
 
         {/* Limits panel */}
