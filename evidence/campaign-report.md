@@ -2,7 +2,7 @@
 
 Computed from `evidence/campaign-report.json` and `lib/kernel.ts` by `tools/verify-evidence.ts`.
 
-- Generated: 2026-10-03T12:48:48.360Z
+- Generated: 2026-10-03T15:11:42.943Z
 - Mechanism: deterministic-inspector-kernel-v1 · mode: NOT_RUN
 - sha256: `8a63030107ef7693619ccfb327afde7ddce335ba91c1eb5e978b1a69f1b11ab8`
 

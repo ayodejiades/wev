@@ -29,6 +29,8 @@ let server;
 let browser;
 let context;
 let offlineContext;
+/** Why the app server went away, if it did: reported instead of a bare 502. */
+let serverExit = null;
 
 /**
  * Console errors and unhandled page errors seen since the last reset.
@@ -94,10 +96,8 @@ async function blockNonLocal(context) {
   });
 }
 
-before(async () => {
-  if (!fs.existsSync(path.join(ROOT, DIST_DIR, "BUILD_ID"))) {
-    throw new Error(`no production build in ${DIST_DIR}/: run pnpm build first`);
-  }
+/** Spawn the built app and wait until it answers. */
+async function startServer() {
   server = spawn("pnpm", ["start", "-p", String(PORT)], {
     cwd: ROOT,
     env: {
@@ -110,9 +110,20 @@ before(async () => {
   });
   server.stdout.on("data", () => {});
   server.stderr.on("data", (d) => process.stderr.write(`[server] ${d}`));
+  server.on("exit", (code, signal) => {
+    serverExit = { code, signal };
+    process.stderr.write(`[server] exited code=${code} signal=${signal}\n`);
+  });
   const health = await waitForHealth();
   assert.equal(health.ok, true);
   assert.equal(health.demoMode, true, "the e2e run must exercise DEMO_MODE=1");
+}
+
+before(async () => {
+  if (!fs.existsSync(path.join(ROOT, DIST_DIR, "BUILD_ID"))) {
+    throw new Error(`no production build in ${DIST_DIR}/: run pnpm build first`);
+  }
+  await startServer();
   browser = await chromium.launch();
   context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   offlineContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
@@ -122,12 +133,35 @@ after(async () => {
   await offlineContext?.close();
   await context?.close();
   await browser?.close();
-  if (server && !server.killed) {
+  if (server && !server.killed && !serverExit) {
     server.kill("SIGTERM");
     await new Promise((r) => setTimeout(r, 500));
     if (!server.killed) server.kill("SIGKILL");
   }
 });
+
+/** Fail with the server's own exit reason rather than a bare connection error. */
+function assertServerAlive() {
+  assert.equal(serverExit, null, `the app server exited (code=${serverExit?.code} signal=${serverExit?.signal})`);
+}
+
+/**
+ * Make sure the app is up before a test talks to it. A recorded exit is a real
+ * failure and is left alone; a server that stopped answering without exiting
+ * (this machine gets OOM-killed under load) is restarted once, loudly, so one
+ * environment hiccup cannot masquerade as a product failure.
+ */
+async function ensureServer() {
+  assertServerAlive();
+  try {
+    if ((await fetch(`${BASE}/api/health`)).status === 200) return;
+  } catch {
+    /* not answering */
+  }
+  process.stderr.write("[e2e] app server stopped answering; restarting it\n");
+  server = undefined;
+  await startServer();
+}
 
 /** A page with the console-error watchdog attached. */
 async function newPage(ctx = context) {
@@ -140,6 +174,7 @@ async function newPage(ctx = context) {
 
 describe("A7.1 smoke: the demo path renders offline with no placeholders", () => {
   test("landing, inbox counters, proof heading and verify tamper copy all render", async () => {
+    await ensureServer();
     const page = await newPage(offlineContext);
     await blockNonLocal(offlineContext);
 
@@ -195,6 +230,7 @@ describe("A6.7 every page renders without console errors or placeholder text", (
   for (const p of paths) {
     test(`${p} responds 200, logs nothing, and shows no undefined/NaN/[object Object]`, async () => {
       pageErrors.length = 0;
+      await ensureServer();
       const page = await newPage();
       const res = await page.goto(`${BASE}${p}`);
       assert.equal(res.status(), 200, `${p} must answer 200`);
@@ -215,6 +251,7 @@ describe("A6.7 every page renders without console errors or placeholder text", (
 describe("A6.3 /proof without a reference run", () => {
   test("says so in one honest line instead of showing an empty box", async () => {
     pageErrors.length = 0;
+    await ensureServer();
     const page = await newPage();
     await page.goto(`${BASE}/proof`);
     const text = await renderedText(page);
@@ -281,6 +318,7 @@ describe("A5.6 the pre-scored adapter calibrates 30 rows with no download", () =
 describe("A5.7 an unreachable local server fails in plain text", () => {
   test("port 9 has nothing listening: the DeciderError is shown, nothing explodes", async () => {
     pageErrors.length = 0;
+    await ensureServer();
     const page = await newPage();
     await page.goto(`${BASE}/calibrate`);
     await page.click("[data-testid='adapter-server']");
@@ -313,6 +351,7 @@ describe("A8 reference-present build", () => {
     assert.ok(calibration.referenceCheck, "the scripted run must regenerate referenceCheck");
     const expectedRate = formatPct(calibration.referenceCheck.goldAgreement.rate);
     pageErrors.length = 0;
+    await ensureServer();
     const page = await newPage();
     await page.goto(`${BASE}/proof`);
     const text = await renderedText(page);
@@ -329,6 +368,7 @@ describe("A8 reference-present build", () => {
       return;
     }
     pageErrors.length = 0;
+    await ensureServer();
     const page = await newPage();
     await page.goto(`${BASE}/verify`);
     await page.click("[data-demo='receipt-sample']");
