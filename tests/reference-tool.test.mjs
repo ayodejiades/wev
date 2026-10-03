@@ -2,7 +2,7 @@
 // a clean exit 2 that writes nothing, the shared agreement summary must be
 // computable, and no key material may live anywhere but the env read.
 import assert from "node:assert/strict";
-import { execFileSync, spawn, spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
@@ -10,8 +10,9 @@ import { test } from "node:test";
 const evidenceDir = path.join(process.cwd(), "evidence");
 const outPath = path.join(evidenceDir, "reference-labels.json");
 
-function gitPorcelainEvidence() {
-  return execFileSync("git", ["status", "--porcelain", "evidence/"], { encoding: "utf8" }).trim();
+/** Sorted evidence/ file listing: no git, so a concurrent tool run cannot flake it. */
+function evidenceListing() {
+  return fs.readdirSync(evidenceDir).sort().join(",");
 }
 
 test("A2.1 summarizeReference is the single agreement implementation", async () => {
@@ -33,7 +34,7 @@ test("A2.1 summarizeReference is the single agreement implementation", async () 
 });
 
 test("A2.2 without a key, pnpm reference prints BLOCKED, exits 2 and writes no file", () => {
-  const before = gitPorcelainEvidence();
+  const before = evidenceListing();
   const res = spawnSync("pnpm", ["reference"], {
     encoding: "utf8",
     env: { ...process.env, REFERENCE_API_KEY: "", REFERENCE_MODEL: "" },
@@ -42,7 +43,7 @@ test("A2.2 without a key, pnpm reference prints BLOCKED, exits 2 and writes no f
   assert.equal(res.status, 2, `expected exit 2, got ${res.status}: ${res.stdout}${res.stderr}`);
   assert.match(`${res.stdout}${res.stderr}`, /reference BLOCKED: set REFERENCE_API_KEY and REFERENCE_MODEL/);
   assert.equal(fs.existsSync(outPath), false, "no reference-labels.json may be written when blocked");
-  assert.equal(gitPorcelainEvidence(), before, "evidence/ must be untouched");
+  assert.equal(evidenceListing(), before, "evidence/ must be untouched");
 });
 
 /** Async `pnpm <args>` so this process keeps serving the stub endpoint meanwhile. */
@@ -127,7 +128,7 @@ test("A2.5 the tool writes a correct evidence file against a stub endpoint", asy
   const port = server.address().port;
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "wev-reference-"));
   const tmpOut = path.join(tmp, "reference-labels.json");
-  const before = gitPorcelainEvidence();
+  const before = evidenceListing();
   try {
     // Must be async: the stub endpoint runs in this process, so a blocking
     // spawnSync would deadlock the very server it is waiting on.
@@ -161,7 +162,7 @@ test("A2.5 the tool writes a correct evidence file against a stub endpoint", asy
     assert.ok(!serialized.includes("stub-key-not-a-real-secret"), "the key must never be stored");
     assert.ok(seenAuth.every((a) => a.startsWith("Bearer ")), "the key goes in the header only");
     assert.ok(seenBodies.every((b) => b.temperature === 0 && b.max_tokens === 8));
-    assert.equal(gitPorcelainEvidence(), before, "a temp-path run must not touch evidence/");
+    assert.equal(evidenceListing(), before, "a temp-path run must not touch evidence/");
   } finally {
     server.close();
     fs.rmSync(tmp, { recursive: true, force: true });
