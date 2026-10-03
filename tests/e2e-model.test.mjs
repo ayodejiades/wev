@@ -320,7 +320,12 @@ test("A9.3 after the first load the same run works with the network blocked", as
 
 test("A9.4 a model whose files are missing shows a plain error and is delisted", async () => {
   await ensureServer();
-  const page = await context.newPage();
+  // Its own profile: this test needs no cached weights (every model file is
+  // stubbed to 404) and must not inherit the blocked-network state A9.3 leaves
+  // behind in the shared context.
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), "wev-model-404-"));
+  const ctx404 = await chromium.launchPersistentContext(profile, { viewport: { width: 1440, height: 1000 } });
+  const page = await ctx404.newPage();
   watch(page);
   await page.route("**/*", (route) => {
     const url = route.request().url();
@@ -345,6 +350,7 @@ test("A9.4 a model whose files are missing shows a plain error and is delisted",
     assert.deepEqual(pageErrors, [], pageErrors.join("\n"));
   } finally {
     await page.unroute("**/*");
+    await ctx404.close();
+    fs.rmSync(profile, { recursive: true, force: true });
   }
-  await page.close();
 });

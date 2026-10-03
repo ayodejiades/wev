@@ -149,10 +149,13 @@ test("A4.6 claim:verify regenerates evidence-manifest.json deterministically", (
   execFileSync("pnpm", ["claim:verify"], { stdio: "pipe" });
   const again = fs.readFileSync(manifestPath, "utf8");
   assert.equal(again, JSON.stringify(manifest, null, 2) + "\n", "manifest bytes must not move");
-  // Only the human-readable timestamped ledgers may differ between runs.
+  // Nothing else in evidence/ may move: the two timestamped ledgers always do,
+  // and browser-parity.json is rewritten only by the opt-in real-weights run
+  // (E2E_MODEL=1 pnpm test:e2e:model), so it is not "unexpected" either.
+  const IGNORED = ["verification.md", "campaign-report.md", "browser-parity.json"];
   const diff = execFileSync("git", ["status", "--porcelain", "evidence/"], { encoding: "utf8" })
     .split("\n")
     .filter(Boolean)
-    .filter((l) => !l.includes("verification.md") && !l.includes("campaign-report.md"));
+    .filter((l) => !IGNORED.some((name) => l.includes(name)));
   assert.deepEqual(diff, [], `unexpected evidence changes: ${diff.join(" | ")}`);
 });
